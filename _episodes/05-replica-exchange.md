@@ -59,8 +59,7 @@ each with a different temperature, and periodically attempt to exchange which
 configurations are at which temperature. The higher temperatures allow the 
 system to overcome free energy barriers and therefore improve the sampling.
 
-
-<img src="/fig/5_replica_exchange/phase_space.png"  width="600" alt="phase space diagram">
+{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/phase_space.png" alt="phase space diagram"}
 
 
 The image shows how lower temperature systems in a rough potential energy 
@@ -72,7 +71,7 @@ The exchanges between replicas are computed using the Metropolis exchange
 criteria which gives the probability of accenting a swap between replicas 1 
 and 2:
 
-<img src="/fig/5_replica_exchange/metropolis_exchange.png"  width="600" alt="metropolis echange">
+{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/metropolis_exchange.png"  width="600" alt="metropolis echange"}
 
 For computational efficiency it is the temperatures that are swapped between replicas.
 
@@ -93,7 +92,7 @@ cd example
 We will use a toy system: A 50 particle bead-spring polymer. This is typical 
 of coarse-grain protein models.
 
-<img src="/fig/5_replica_exchange/polymer.png"  width="600" alt="polymer.txt">
+{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/polymer.png"  width="600" alt="polymer.txt"}
 
 The data file `polymer.txt` contains the system topology. 
 
@@ -290,7 +289,7 @@ how the temperature index varies with the timestep.
 gnuplot> plot "log.lammps" using 1:2 with lines
 ```
 
-<img src="/fig/5_replica_exchange/traversal.png"  width="600" alt="temperature traversal">
+{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/traversal.png"  width="600" alt="temperature traversal"}
 
 
 The plot on the left shows good traversal, the replica reaches T0 and T9 
@@ -389,7 +388,7 @@ On ARCHER2 remember to load the gnuplot module
 module load gnuplot
 ```
 
-<img src="/fig/5_replica_exchange/RG.png"  width="600" alt="Plot of RG histograms">
+{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/RG.png"  width="600" alt="Plot of RG histograms"}
 
 We can see that temperature index 0 (300K) has the most well defined peak with 
 the smallest radius of gyration. This typical of a globule like polymer state. 
@@ -405,7 +404,7 @@ T configurations.
 
 
 
-<img src="/fig/5_replica_exchange/structures.png"  width="600" alt="polymer structures">
+{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/structures.png"  width="600" alt="polymer structures"}
 
 The low and high temperature configurations of the polymer are shown in the 
 image.
