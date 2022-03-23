@@ -107,11 +107,14 @@ for running replica exchange are the following:
 ```
 variable	T world 300.00 354.47 416.81 488.14 569.86 663.45 764.45 865.45 966.45 1000.00
 ```
+
 and
+
 ```
 variable	I world 0 1 2 3 4 5 6 7 8 9
 
 ```
+
 Which use the `world` variable type to assign a temperature and corresponding 
 index to each replica that will be run. Note here we have chosen to use 10 
 replicas.
@@ -120,6 +123,7 @@ replicas.
 ```
 fix 2 all langevin ${T} ${T} 1000 ${SEED}
 ```
+
 The substitutions `${T}` set the Langevin thermostat settings to the specified 
 temperature for each replica.
 
@@ -128,10 +132,8 @@ temperature for each replica.
 dump		1 all atom 1000 polymer.${I}.lammpstrj
 
 ```
+
 The substitution `${I}` allows each replica to write its own trajectory.
-
-
-
 
 ```
 temper		1000000 100 $T 2 ${SEED} ${SEED}
@@ -172,9 +174,6 @@ Using:
 
 you should get the same temperature scale.
 
-
-
----
 ## Running the simulation
 
 To run the simulation the `-partition` argument must be used when running 
@@ -182,6 +181,7 @@ LAMMPS.
 
 In this example we have 10 replicas so 10 partitions must be used. An example 
 command to do this is:
+
 ```
 mpirun -np 10 ./lmp_mpi -in run.in -partition 10x1
 ```
@@ -190,9 +190,11 @@ This will use 10 MPI processes to run 10 replicas of the simulation (1 MPI
 processes per replica).
 
 More MPI processes per replica can be used, for example
+
 ```
 mpirun -np 20 ./lmp_mpi -in run.in -partition 10x2
 ```
+
 will run the same parallel tempering simulation but use 2 MPI processes per 
 replica.
 
@@ -207,6 +209,7 @@ MPI programs is with ``srun`` on the compute nodes.
 
 The master log file `log.lammps` contains the information about which 
 temperature each replica is at each timestep. Below is an example:
+
 ```
 LAMMPS (29 Sep 2021)
 Running on 10 partitions of processors
@@ -223,8 +226,8 @@ Step T0 T1 T2 T3 T4 T5 T6 T7 T8 T9
 800 3 2 1 0 5 4 8 6 9 7
 900 4 2 1 0 6 3 7 5 9 8
 1000 4 1 2 0 6 3 7 5 9 8
-
 ```
+
 If we look at step 1000 we see that replica 0 has temperature index 4 (569.86 
 K), replica 2 has temperature index 1 (354.47), etc...
 
@@ -237,7 +240,6 @@ These are continuous in coordinate space, not in temperature. The temperature
 of each trajectory varies corresponding to the swaps listed in the master log 
 file. Before analysis the trajectories must be re-ordered into trajectories of 
 the same temperature.
-
 
 ## Checking the simulation
 
@@ -255,7 +257,9 @@ acceptance ratio of the simulation.
 ```
 python acceptance.py
 ```
+
 Output:
+
 ```
 T indexes, Acceptance ratio
 0 - 1, 0.275972402759724
@@ -278,7 +282,6 @@ If the ratios were too low (less than 20%) you would want to reduce the
 temperature differences, and use more replicas, If too high (greater than 50%) 
 you would want to increase the temperature difference and use less replicas.
 
-
 ### Traversal of the temperatures
 
 It is also important to check that the replicas are fully traversing 
@@ -291,14 +294,12 @@ gnuplot> plot "log.lammps" using 1:2 with lines
 
 {% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/traversal.png"  width="600" alt="temperature traversal"}
 
-
 The plot on the left shows good traversal, the replica reaches T0 and T9 
 multiple times.
 
 The plot on the right is an example of poor traversal (we changed the swap 
 frequency to 10000).
 
----
 ## Reordering the trajectories into constant temperature
 
 This can be done using the provided python script `reorder.py`
@@ -306,6 +307,7 @@ This can be done using the provided python script `reorder.py`
 ```
 python reorder.py polymer 10
 ```
+
 Where the first argument is the prefix of the trajectory files and the second 
 is the number of replicas.
 
@@ -324,9 +326,11 @@ key parts are that the data file must still be read in. The pair and bond
 styles are still defined the same way. The NVE and Langevin fixes are not 
 needed as no integration is performed for a rerun. We define a compute for the 
 analysis we want to do
+
 ```
 compute		RG all gyration 
 ```
+
 which computes the radius of gyration of the polymer.
 
 We then use `ave/histo` fix which creates a histogram of the RG values over 
@@ -354,11 +358,11 @@ mpirun -np 10 lmp_mpi -in rerun.in -partition 10x1
 
 For ARCHER2 the slurm script `rerun.slurm` is provided.
 
-
 Note that this can be done in serial individually for each temperature. It is 
 trivially parallel as no communication is needed between the replicas we are 
 rerunning (unlike the parallel tempering run). To do this you would just need 
 to change the line
+
 ```
 variable I world 0 1 2 3 4 5 6 7 8 9
 ```
@@ -402,14 +406,10 @@ The plot shows the enhanced sampling capabilities of parallel tempering. The
 extended high T configurations enable a greater exploration of the compact low 
 T configurations.
 
-
-
 {% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/structures.png"  width="600" alt="polymer structures"}
 
 The low and high temperature configurations of the polymer are shown in the 
 image.
-
-
 
 ## Further reading
 
