@@ -1,0 +1,44 @@
+variable	T world 300.00 354.47 416.81 488.14 569.86 663.45 764.45 865.45 966.45 1000.00
+variable	I world 0 1 2 3 4 5 6 7 8 9
+
+variable	SEED equal 123
+
+units		real
+atom_style	molecular
+boundary	p p p
+
+read_data	polymer.txt
+
+pair_style	lj/cut 17.5
+pair_modify	shift  yes
+pair_coeff	1 1 0.5 5.0
+mass		1 100.0
+
+
+bond_style	harmonic
+bond_coeff	1 10.0 3.8
+
+special_bonds	lj 0.0 1.0 1.0
+
+neighbor	2.0 bin
+
+
+fix 1 all nve
+fix 2 all langevin ${T} ${T} 1000 ${SEED}
+fix 3 all recenter INIT INIT INIT
+
+timestep	10.0
+
+
+thermo_style	custom step temp etotal pe ke
+thermo		1000
+
+
+dump		1 all atom 1000 polymer.${I}.lammpstrj
+dump_modify	1 sort id
+
+
+# parallel tempering
+temper		1000000 100 $T 2 ${SEED} ${SEED}
+
+

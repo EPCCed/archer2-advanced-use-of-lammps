@@ -1,298 +1,249 @@
 ---
 title: "Measuring and improving LAMMPS performance"
 teaching: 30
-exercises: 15
+exercises: 45
 questions:
-- "What hardware and software is available on ARCHER2?"
-- "How does the hardware fit together?"
+- "How can we run LAMMPS on ARCHER2?"
+- "How can we improve the performance of LAMMPS?"
 objectives:
-- "Gain an overview of the technology available on the ARCHER2 service."
+- "Gain an overview of submitting and running jobs on the ARCHER2 service."
+- "Gain an overview of methods to improve the performance of LAMMPS."
 keypoints:
-- "ARCHER2 consists of high performance login nodes, compute nodes, storage systems and interconnect."
-- "There is a wide range of software available on ARCHER2."
-- "The system is based on standard Linux with command line access."
+- "LAMMPS offers a number of built in methods to improve performance."
+- "It is important to spend some time understanding your system and 
+   considering its performance."
+- "Where possible, always run a quick benchmark of your system before setting 
+   up a large run."
 ---
 
-## Architecture
+## Running LAMMPS on ARCHER2
 
-The ARCHER2 Cray Shasta system consists of a number of different node types. The ones visible
-to users are:
-
-* Login nodes
-* Compute nodes
-* Data analysis (pre-/post- processing) nodes
-
-All of the node types have the same processors: AMD EPYC Zen2 7742, 2.25GHz, 64-cores. All nodes
-are dual socket nodes so there are 128 cores per node.
-
-{% include figure.html url="" max-width="80%" file="/fig/archer2_architecture.png" 
-alt="ARCHER2 architecture diagram" caption="ARCHER2 architecture" %}
-
-## Compute nodes
-
-There are around 1,000 compute nodes in total, giving 128,000 compute cores on the initial ARCHER2 4-cabinet system all with 256 GiB memory per node.
-All of the compute nodes are linked
-together using the high-performance Cray Slingshot interconnect.
-
-The final 23-cabinet system will have 5,585 compute nodes and 748,856
-compute cores, containing 300 high-memory nodes with 512 GiB memory
-per node.
-
-Access to the compute nodes is controlled by the Slurm scheduling system which supports
-both batch jobs and interactive jobs.
-
-Compute node summary (with comparison to ARCHER):
-
-| | ARCHER2 | ARCHER |
-|-|---------|--------|
-| Processors | 2x AMD EPYC Zen2 (Rome) 7742, 2.25 GHz, 64-core | 2x Intel E5-2697 v2, 2.7 GHz, 12-core | 
-| Cores per node | 128 | 24 |
-| NUMA | 8 NUMA regions per node, 16 cores per NUMA region | 2 NUMA regions per node, 12 cores per NUMA region |
-| Memory Capacity | 256/512 GB DDR 3200, 8 memory channels | 64/128 GB DDR 1666, 4 memory channels |
-| Memory Bandwidth | >380 GB/s per node | >119 GB/s per node |
-| Interconnect Bandwidth | 25 GB/s per node bi-directional | 15 GB/s per node bi-directional |
-
-## Storage
-
-There are three different storage systems available on ARCHER2:
-
-* Home
-* Work
-* Solid State
-
-### Home
-
-The home file systems are available on the login nodes only and are designed for the storage
-of critical source code and data for ARCHER2 users. They are backed-up regularly offsite for
-disaster recovery purposes - restoration of accidentally deleted files is not supported. There is a
-total of 1 PB usable space available on the home file systems.
-
-All users have their own directory on the home file systems at:
+ARCHER2 uses a module system. In general, you can run LAMMPS on ARCHER2 by 
+using the LAMMPS module:
 
 ```
-/home/<projectID>/<subprojectID>/<userID>
-```
+ta058js@ln03:~> module avail lammps
 
-For example, if your username is `auser` and you are in the project `t01` then your *home
-directory* will be at:
-
-```
-/home/t01/t01/auser
-```
-
-> ## Home file system and Home directory
-> A potential source of confusion is the distinction between the *home file system* which is
-> the storage system on ARCHER2 used for critical data and your *home directory* which is a 
-> Linux concept of the directory that you are placed into when you first login, that is 
-> stored in the `$HOME` environment variable and that can be accessed with the `cd ~` command.
-{: .callout}
-
-You can view your home file system quota and use through SAFE. Use the *Login account* menu
-to select the account you want to see the information for. The account summary page will
-contain information on your home file system use and any quotas (user or project) that
-apply to that account. (SAFE home file system use data is updated daily so the information
-may not quite match the state of the system if a large change has happened recently. Quotas
-will be completely up to date as they are controlled by SAFE.)
-
-> ## Subprojects?
-> Some large projects may choose to split their resources into multiple subprojects. These 
-> subprojects will have identifiers prepended with the main project ID. For example, the
-> `rse` subgroup of the `t01` project would have the ID `t01-rse`. If the main project has
-> allocated storage quotas to the subproject the directories for this storage will be 
-> found at, for example:
-> ```
-> /home/t01/t01-rse/auser
-> ```
-> Your Linux home directory will generally not be changed when you are made a member of 
-> a subproject so you must change directories manually (or change the ownership of files)
-> to make use of this different storage quota allocation.
-{: .callout}
-
-### Work
-
-The work file systems, which are available on the login, compute and data analysis nodes, are
-designed for high performance parallel access and are the primary location that jobs running on
-the compute nodes will read data from and write data to. They are based on the Lustre parallel
-file system technology. The work file systems are not backed up in any way. There is a total of 
-14.5 PB usable space available on the work file systems.
-
-All users have their own directory on the work file systems at:
+------------------- /work/y07/shared/archer2-lmod/apps/core -------------------
+   lammps/29_Sep_2021
 
 ```
-/work/<projectID>/<subprojectID>/<userID>
-```
 
-For example, if your username is `auser` and you are in the project `t01` then your main home
-directory will be at:
-
-```
-/work/t01/t01/auser
-```
-
-> ## Jobs can't see your data?
-> If your jobs are having trouble accessing your data make sure you have placed it on Work
-> rather than Home. Remember, **the home file systems are not visible from the compute nodes**.
-{: .callout}
-
-You can view your work file system use and quota through SAFE in the same way as described 
-for the home file system above. If you want more up to date information, you can query 
-the quotas and use directly on ARCHER2 itself using the `lfs quota` command. For example,
-to query your project quota on the work file system you could use:
-
-<!-- TODO update with correct command for ARCHER2 -->
+Running `module load lammps` will set up your environment to use LAMMPS. For 
+this course, we will be using certain LAMMPS packages that are not included in 
+the central module. We have built a version of LAMMPS that can be accessed by 
+ensuring that the following commands are run prior to executing your LAMMPS 
+command.
 
 ```
-lfs quota -hg t01 /work/t01/t01
+module load PrgEnv-gnu
+module load cray-python
+
+export LAMMPS_DIR=/work/z19/z19/jsindt/LAMMPS_BUILD/mylammps/install
+export PATH=${PATH}:${LAMMPS_DIR}/bin
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${LAMMPS_DIR}/lib64
+export PYTHONPATH=${PYTHONPATH}:${LAMMPS_DIR}/lib/python3.9/site-packages
 ```
-{: .language-bash}
-```
-Disk quotas for group t01 (gid 1001):
-     Filesystem    used   quota   limit   grace   files   quota   limit   grace
-           /fs3  17.24T      0k  21.95T       - 6275076       0 10000000       -
-```
-{: .output}
 
-(Remember to replace `t01` with your project code.) The `used` column shows how much space
-the whole project is using and the `limit` column shows how much quota is available for the
-project. You can show your own user's use and quota with:
+The build instructions for this version are described in the next section of 
+the course.
 
-```
-lfs quota -hu auser /work/t01/
-```
-{: .language-bash}
-```
-Disk quotas for user auser (uid 5496):
-     Filesystem    used   quota   limit   grace   files   quota   limit   grace
-           /fs3  8.526T      0k      0k       -  764227       0       0       -
-```
-{: .output}
+Once your environment is set up, you will have access to the `lmp` LAMMPS 
+executable. Note that you will only be able to run this on a single core on 
+the ARCHER2 login node.
 
-A limit of 0k here shows that no user quota is in place (but you are still bound by an overall
-project quota in this case.)
+### Submitting a job to the compute nodes
 
-### Solid State
+To run LAMMPS on multiple cores/nodes, you will need to submit a job to the 
+ARCHER2 compute nodes. The compute nodes do not have access to the landing 
+`home` filesystem -- this filesystem is to store useful/important information. 
+On ARCHER2, when submitting jobs to the compute nodes, make sure that you are 
+in your `/work/ta058/ta058/<username>` directory.
 
-The solid state storage system is available on the compute nodes and is designed for
-the highest read and write performance to improve performance of workloads that are I/O bound in
-some way. Access to solid state storage resources is controlled through the Slurm scheduling 
-system. The solid state storage is not backed up in any way. There is a total of 1.1 PB usable
-space available on the solid state storage system.
-
-Data on the solid state storage is transient so all data you require before a job starts or
-after a job finishes must be *staged* on to or off of the solid state storage. We discuss how
-this works in the Scheduler episode later.
-
-### Sharing data with other users
-
-Both the home and work file systems have special directories that allow you to share data 
-with other users. There are directories that allow you to share data only with other users
-in the same project and directories that allow you tot share data with users in other projects.
-
-To share data with users in the same project you use the `/work/t01/t01/shared` directory
-(remember to replace `t01` with your project ID) and make sure the permissions on the 
-directory are correctly set to allow sharing in the project:
+For this course, we have prepared a number of exercises. You can get a copy of 
+these exercises by running (make sure to run this from `/work`):
 
 ```
-auser@uan01:~> mkdir /work/t01/t01/shared/interesting-data
-auser@uan01:~> cp -r modelling-output /work/t01/t01/shared/interesting-data/
-auser@uan01:~> chmod -R g+rX,o-rwx /work/t01/t01/shared/interesting-data
-auser@uan01:~> ls -l /work/t01/t01/shared
+svn checkout https://github.com/EPCCed/archer2-advanced-use-of-lammps/trunk/exercises
 ```
-{: .language-bash}
-```
-total 150372
 
-...snip...
+Once this is downloaded, please  `cd exercises/1-performance-exercise/`. In this 
+directory you will find three files:
 
-drwxr-s---  2 auser  t01      4096 Jul 20 12:09 interesting-data
+  - `sub.slurm` is a Slurm submission script -- this will let you submit jobs 
+    to the compute nodes. Initially, it will run a single core job, but we 
+    will be editing it to run on more cores.
+  - `in.ethanol` is the LAMMPS input script that we will be using for this 
+    exercise. This script is meant to run a small simulation of 125 ethanol 
+    molecules in a periodic box.
+  - `data.ethanol` is a LAMMPS data file for a single ethanol molecule. This 
+    template will be copied by the `in.lammps` file to generate our simulation 
+    box.
 
-..snip...
-
-```
-{: .output}
-
-To share data with users in other projects, you use the `/work/t01/shared` directory
-(remember to replace `t01` with your project ID) and make sure the permissions on the 
-directory are correctly set to allow sharing with all other users:
+To submit your first job on ARCHER2, please run:
 
 ```
-auser@uan01:~> mkdir /work/t01/shared/more-interesting-data
-auser@uan01:~> cp -r more-modelling-output /work/t01/shared/more-interesting-data/
-auser@uan01:~> chmod -R go+rX /work/t01/shared/more-interesting-data
-auser@uan01:~> ls -l /work/t01/shared
+sbatch sub.slurm
 ```
-{: .language-bash}
+
+You can check the progress of your job by running `squeue -u ${USER}`. Your 
+job state will go from `PD` (pending) to `R` (running) to `CG` (cancelling). 
+Once your job is complete, it will have produced a file called 
+`slurm-####.out` -- this file contains the STDOUT and STDERR produced by your 
+job.
+
+The job will also produce a LAMMPS log file `log.out`. In this file, you will 
+find all of the thermodynamic outputs that were specified in the LAMMPS 
+`thermo_style`, as well as some very useful performance information! After 
+every `run` is complete, LAMMPS outputs a series of information that can be 
+used to better understand the behaviour of your job.
+
 ```
-total 150372
+Loop time of 197.21 on 1 procs for 10000 steps with 1350 atoms
 
-...snip...
+Performance: 4.381 ns/day, 5.478 hours/ns, 50.707 timesteps/s
+100.0% CPU use with 1 MPI tasks x 1 OpenMP threads
 
-drwxr-sr-x  2 auser  t01      4096 Jul 20 12:09 more-interesting-data
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 68.063     | 68.063     | 68.063     |   0.0 | 34.51
+Bond    | 5.0557     | 5.0557     | 5.0557     |   0.0 |  2.56
+Kspace  | 5.469      | 5.469      | 5.469      |   0.0 |  2.77
+Neigh   | 115.22     | 115.22     | 115.22     |   0.0 | 58.43
+Comm    | 1.4039     | 1.4039     | 1.4039     |   0.0 |  0.71
+Output  | 0.00034833 | 0.00034833 | 0.00034833 |   0.0 |  0.00
+Modify  | 1.8581     | 1.8581     | 1.8581     |   0.0 |  0.94
+Other   |            | 0.139      |            |       |  0.07
 
-..snip...
+Nlocal:        1350.00 ave        1350 max        1350 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:        10250.0 ave       10250 max       10250 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:        528562.0 ave      528562 max      528562 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 528562
+Ave neighs/atom = 391.52741
+Ave special neighs/atom = 7.3333333
+Neighbor list builds = 10000
+Dangerous builds not checked
+Total wall time: 0:05:34
+```
+
+The ultimate aim is always to get your simulation to run in a sensible amount 
+of time. This often simply means trying to optimise the final value ("Total 
+wall time"), though some people care more about optimising efficiency (wall 
+time multiplied by core count). In this lesson, we will be focusing on what 
+we can do to improve these.
+
+## Increasing computational resources
+
+The first approach that most people take to increase the speed of their 
+simulations is to increase the computational resources. If your system can 
+accommodate this, doing this can sometimes lead to "easy" improvements. 
+However, this usually comes at an increased cost (if running on a system for 
+which compute is charged) and does not always lead to the desired results.
+
+In your first run, LAMMPS was run on a single core. For a large enough system, 
+increasing the number of cores used should reduce the total run time. In your 
+`sub.slurm` file, you can edit the `-n #` in the line:
 
 ```
-{: .output}
+srun --oversubscribe --mem=15G --exact -n 1 lmp -i in.ethanol -l log.out
+```
 
-Remember, equivalent sharing directories exist on the home file system that you can
-use in exactly the same way.
+to run on more cores. An ARCHER2 node has 128 cores, so you could potential 
+run on up to 128 cores.
 
-## System software
-
-The ARCHER2 system runs the *Cray Linux Environment* which is based on SUSE Enterprise Linux.
-The service officially supports the *bash* shell for interactive access, shell scripting and
-job submission scripts. The scheduling software is SLURM.
-
-As well as the hardware and system software, Cray supply the Cray Programming Environment which
-contains:
-
-| Compilers | GCC, Cray Compilers (CCE), AMD Compilers (AOCC) |
-| Parallel libraries | Cray MPI (MPICH2-based), OpenSHMEM, Global Arrays |
-| Scientific and numerical libraries | BLAS/LAPACK/BLACS/ScaLAPACK (Cray LibSci, AMD AOCL), FFTW3, HDF5, NetCDF |
-| Debugging and profiling tools | gdb4hpc, valgrind4hpc, CrayPAT + others |
-| Optimised Python 3 environment | numpy, scipy, mpi4py, dask |
-| Optimised R environment | standard packages (including "parallel") |
-
-The largest differences from ARCHER are:
-   - Addition of optimised Python 3 and R environments
-   - Lack of Intel compilers and MKL libraries
-   - Lack of Arm Forge: DDT debugger and MAP profiler
-
-On top of the Cray-provided software, the EPCC ARCHER2 CSE service have installed a wide range 
-of modelling and simulation software, additional scientific and numeric libraries, data analysis
-tools and other useful software. Some examples of the software installed are:
-
-| Research area | Software |
-|-|-|
-| Materials and molecular modelling | CASTEP, ChemShell, CP2K, Elk, LAMMPS, NWChem, ONETEP, Quantum Espresso, VASP |
-| Engineering | Code Saturne, FEniCS, OpenFOAM |
-| Biomolecular modelling | GROMACS, NAMD |
-| Earth system modelling | MITgcm, Met Office UM, Met Office LFRic, NEMO |
-| Scientific libraries | ARPACK, Boost, Eigen, ELPA, GSL, HYPRE, METIS, MUMPS, ParaFEM, ParMETIS, PETSc, Scotch, SLEPC, SUNDIALS, Zoltan |
-| Software tools | CDO, CGNS, NCL, NCO, Paraview, PLUMED, PyTorch, Tensorflow, VMD, VTST |
-
-> ## Licensed software
-> For licensed software installed on ARCHER2, users are expected to bring their own licences to
-> the service with them. The ARCHER2 service does not provide software licences for use by 
-> users. Access to licensed software is available via three different mechnisms:
->   - Access control groups - for software that does not support a licence server
->   - Local licence server - for software that requires a licence server running on the ARCHER2 system
->   - Remote licence server - to allow software to call out to a publicly-accessible licence server
-{: .callout}
-
-More information on the software available on ARCHER2 can be found in
-[the ARCHER2 Documentation](https://docs.archer2.ac.uk).
-
-ARCHER2 also supports the use of [Singularity containers](https://docs.archer2.ac.uk/user-guide/containers/) for single-node and multi-node jobs.
-
-> ## What about your research?
+> ### Quick benchmark
+> As a first exercise, fill in the table below.
 >
-> Speak to your neighbour about your planned use of ARCHER2. Given what you now know about the system,
-> what do you think the biggest opportunities are for your research in using ARCHER2? What do you think
-> the largest challenges are going to be for you?
-> 
-> Write a few sentences in the course Etherpad describing the opportunities and challenges you discussed.
-{: .challenge}
+>  |Number of cores| Walltime | Performance (ns/day) |
+>  |---------------|----------|----------------------|
+>  |   1  | | | |
+>  |   2  | | | |
+>  |   4  | | | |
+>  |   8  | | | |
+>  |  16  | | | |
+>  |  32  | | | |
+>  |  64  | | | |
+>  | 128  | | | |
+>
+> Do you spot anything unusual in these run times? If so, can you explain this 
+> strange result?
+> > ### Solution
+> > The simulation takes almost the same amount of time when running on a 
+> > single core as when running on two cores. A more detailed look into the 
+> > `in.ethanol` file will reveal that this is because the simulation box is 
+> > not uniformly packed.
+> > 
+> > At the start of the simulation (initial equilibration), the simulation box 
+> > looks like this:
+> > 
+> > {% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt="Phase space diagram" caption="Phase space diagram" %}
+> > 
+> {: solution}
+
+{: challenge}
+
+
+> ### Note!
+> Here are only considering MPI parallelisation -- LAMMPS offers the option 
+> to run using joint MPI+OpenMP (more on that later), but for the exercises 
+> in this lesson, we will only be considering MPI.
+
+## Domain decomposition
+
+In the exercise above, you will (hopefully) have noticed that, while the 
+simulation run time decreases overall, the jump from 
+
+## Considering neighbour lists
+
+Let's take another look at the profiling information provided by LAMMPS:
+
+```
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 68.063     | 68.063     | 68.063     |   0.0 | 34.51
+Bond    | 5.0557     | 5.0557     | 5.0557     |   0.0 |  2.56
+Kspace  | 5.469      | 5.469      | 5.469      |   0.0 |  2.77
+Neigh   | 115.22     | 115.22     | 115.22     |   0.0 | 58.43
+Comm    | 1.4039     | 1.4039     | 1.4039     |   0.0 |  0.71
+Output  | 0.00034833 | 0.00034833 | 0.00034833 |   0.0 |  0.00
+Modify  | 1.8581     | 1.8581     | 1.8581     |   0.0 |  0.94
+Other   |            | 0.139      |            |       |  0.07
+```
+
+This output can provide us with a lot of valuable information about where our 
+simulation is taking a long time, and can help us assess where we can save 
+time. In the example above, we notice that the majority of the time is spent 
+in the `Neigh` section -- e.g. a lot of time is spent calculating neighbour 
+lists.
+
+
+
+## Further tips
+
+### Shake
+
+### Hybrid MPI+OpenMP runs
+
+- always study the timing summary. there is lots of useful information there. Pair should be dominant. When using KSpace optimum is often to have KSpace take less than 30%, often around 10%, similarly for Neigh.
+
+-  Neigh can be adjusted with cutoff and neighbor list skin and update frequency. To find a good value for neigh_modify delay and every run with delay 0 every 1 check yes and look at the number of neighbor list builds. compute the average and use a delay that is safely less than that and then run with every 1 or 2 and check for dangerous builds. the system needs to be equilibrated. gains from tweaking skin are small unless cutoffs are short.
+
+- When running with GPU package acceleration, it is often better to leave KSpace on the CPU (since its acceleration potential is limited, but it can run concurrently to Pair (which is thus mostly "free" and one may increase the coulomb cutoff unless the time spent on Pair (with acceleration) matches Bond+KSpace.
+
+- For inhomogeneous systems or systems with large vacuum one needs to watch out for load imbalance. LAMMPS decomposes based on volume not density. the largest gain is often from using the processors keyword to adjust the processor grid. then one can consider the balance command, then fix balance and finally switching to tiled communication and decomposition. please see the new LAMMPS paper and/or the manual for some discussion of brick versus tiled.
+
+- MPI and domain decomposition is most of the time the most efficient parallelization. smaller subdomains bring also more cache efficiency, which does not apply to multi-threading. OpenMP should be used when there are many cores on a node so that MPI has bandwidth issues. OpenMP should be limited to a socket. Processor and memory affinity settings are also important (and can produce 10% or so difference in performance).
+
+- People should pay attention to not using too many MPI ranks. that can kill performance. biggest challenge for running large systems with many MPI ranks is KSpace due to having to do global transposes of the grids and - because lammps uses "pencils" - there is effectively only a 2d decomposition possible. Once KSpace becomes significant, it is better to use MPI+OpenMP to reduce the number of MPI ranks for KSpace. an additional option is to use run style verlet/split where a separate partition is assigned to KSpace and the rest can be run with a number of MPI ranks that is an integer multiple of the KSpace ranks.
+
+- a particular pet peeve of mine are people that suffer from "premature optimization", i.e. they worry about efficiency of something that doesn't contribute much before even having figured out how to run their system and also people that run too large systems right  away without knowing anything. good planning is key to successful research with efficient usage of resources. a frequent example are people that equilibrate a bulk liquid to save time for a calculation of a slab system, but then run into issues with image flags and complete disregard that switching from periodic to non-periodic boundaries is a drastic change that usually requires more time and effort to be dissipated and re-equilibrated than what was potentially saved. better to start with non-periodic right away and add a wall fix to contain particles.
+
+- i don't think I have to tell you anything about how important benchmarking, especially scaling to large systems and many mpi ranks is and also how helpful careful profiling can be (the timing summary in LAMMPS is a good start but for particular problems one needs the real deal). on linux machines I have learned a lot from using kernel based profiling with "perf". sometimes just logging into the compute nodes and doing "perf top" can be very instructive. on the other hand, one can easily spend too much time on trying to squeeze the last bit of performance to make a calculation faster. this is often not worth the time. reaching 80% of the optimum can often be reached with 20% effort
 
 {% include links.md %}
 
