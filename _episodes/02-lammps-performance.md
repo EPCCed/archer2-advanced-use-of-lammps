@@ -158,9 +158,7 @@ run on up to 128 cores.
 
 
 > ## Quick benchmark
-> 
 > As a first exercise, fill in the table below.
->
 > |Number of cores| Walltime | Performance (ns/day) |
 > |---------------|----------|----------------------|
 > |   1  | | | |
@@ -171,29 +169,26 @@ run on up to 128 cores.
 > |  32  | | | |
 > |  64  | | | |
 > | 128  | | | |
->
 > Do you spot anything unusual in these run times? If so, can you explain this 
 > strange result?
-> 
 > > ## Solution
 > > The simulation takes almost the same amount of time when running on a 
 > > single core as when running on two cores. A more detailed look into the 
 > > `in.ethanol` file will reveal that this is because the simulation box is 
 > > not uniformly packed.
-> > 
 > > At the start of the simulation (initial equilibration), the simulation box 
 > > looks like this:
 > {: .solution}
 {: .challenge}
 
-{% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt="Phase space diagram" caption="Simulation box at the start of the simulation" %}
+{% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt=""Simulation box at the start of the simulation" caption="Simulation box at the start of the simulation" %}
 
 
 > ### Note!
 > Here are only considering MPI parallelisation -- LAMMPS offers the option 
 > to run using joint MPI+OpenMP (more on that later), but for the exercises 
 > in this lesson, we will only be considering MPI.
-{: .note}
+{: .callout}
 
 ## Domain decomposition
 
