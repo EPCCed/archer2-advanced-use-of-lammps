@@ -158,6 +158,7 @@ run on up to 128 cores.
 
 
 > ## Quick benchmark
+> 
 > As a first exercise, fill in the table below.
 >
 > |Number of cores| Walltime | Performance (ns/day) |
@@ -182,10 +183,10 @@ run on up to 128 cores.
 > > 
 > > At the start of the simulation (initial equilibration), the simulation box 
 > > looks like this:
-> > 
-> > {% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt="Phase space diagram" caption="Simulation box at the start of the simulation" %}
 > {: .solution}
 {: .challenge}
+
+{% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt="Phase space diagram" caption="Simulation box at the start of the simulation" %}
 
 
 > ### Note!
