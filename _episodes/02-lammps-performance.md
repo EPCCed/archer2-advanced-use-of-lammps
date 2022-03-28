@@ -21,7 +21,7 @@ keypoints:
 ARCHER2 uses a module system. In general, you can run LAMMPS on ARCHER2 by 
 using the LAMMPS module:
 
-```
+```bash
 ta058js@ln03:~> module avail lammps
 
 ------------------- /work/y07/shared/archer2-lmod/apps/core -------------------
@@ -35,7 +35,7 @@ the central module. We have built a version of LAMMPS that can be accessed by
 ensuring that the following commands are run prior to executing your LAMMPS 
 command.
 
-```
+```bash
 module load PrgEnv-gnu
 module load cray-python
 
@@ -63,7 +63,7 @@ in your `/work/ta058/ta058/<username>` directory.
 For this course, we have prepared a number of exercises. You can get a copy of 
 these exercises by running (make sure to run this from `/work`):
 
-```
+```bash
 svn checkout https://github.com/EPCCed/archer2-advanced-use-of-lammps/trunk/exercises
 ```
 
@@ -82,7 +82,7 @@ directory you will find three files:
 
 To submit your first job on ARCHER2, please run:
 
-```
+```bash
 sbatch sub.slurm
 ```
 
@@ -149,29 +149,32 @@ In your first run, LAMMPS was run on a single core. For a large enough system,
 increasing the number of cores used should reduce the total run time. In your 
 `sub.slurm` file, you can edit the `-n #` in the line:
 
-```
-srun --oversubscribe --mem=15G --exact -n 1 lmp -i in.ethanol -l log.out
+```bash
+srun --exact -n 1 lmp -i in.ethanol -l log.out
 ```
 
 to run on more cores. An ARCHER2 node has 128 cores, so you could potential 
 run on up to 128 cores.
 
+
 > ### Quick benchmark
+> 
 > As a first exercise, fill in the table below.
 >
->  |Number of cores| Walltime | Performance (ns/day) |
->  |---------------|----------|----------------------|
->  |   1  | | | |
->  |   2  | | | |
->  |   4  | | | |
->  |   8  | | | |
->  |  16  | | | |
->  |  32  | | | |
->  |  64  | | | |
->  | 128  | | | |
+> |Number of cores| Walltime | Performance (ns/day) |
+> |---------------|----------|----------------------|
+> |   1  | | | |
+> |   2  | | | |
+> |   4  | | | |
+> |   8  | | | |
+> |  16  | | | |
+> |  32  | | | |
+> |  64  | | | |
+> | 128  | | | |
 >
 > Do you spot anything unusual in these run times? If so, can you explain this 
 > strange result?
+> 
 > > ### Solution
 > > The simulation takes almost the same amount of time when running on a 
 > > single core as when running on two cores. A more detailed look into the 
@@ -181,17 +184,17 @@ run on up to 128 cores.
 > > At the start of the simulation (initial equilibration), the simulation box 
 > > looks like this:
 > > 
-> > {% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt="Phase space diagram" caption="Phase space diagram" %}
+> > {% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt="Phase space diagram" caption="Simulation box at the start of the simulation" %}
 > > 
-> {: solution}
-
-{: challenge}
+> {: .solution}
+{: .challenge}
 
 
 > ### Note!
 > Here are only considering MPI parallelisation -- LAMMPS offers the option 
 > to run using joint MPI+OpenMP (more on that later), but for the exercises 
 > in this lesson, we will only be considering MPI.
+{: .note}
 
 ## Domain decomposition
 
