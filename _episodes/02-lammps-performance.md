@@ -157,8 +157,7 @@ to run on more cores. An ARCHER2 node has 128 cores, so you could potential
 run on up to 128 cores.
 
 
-> ### Quick benchmark
-> 
+> ## Quick benchmark
 > As a first exercise, fill in the table below.
 >
 > |Number of cores| Walltime | Performance (ns/day) |
@@ -175,7 +174,7 @@ run on up to 128 cores.
 > Do you spot anything unusual in these run times? If so, can you explain this 
 > strange result?
 > 
-> > ### Solution
+> > ## Solution
 > > The simulation takes almost the same amount of time when running on a 
 > > single core as when running on two cores. A more detailed look into the 
 > > `in.ethanol` file will reveal that this is because the simulation box is 
@@ -185,7 +184,6 @@ run on up to 128 cores.
 > > looks like this:
 > > 
 > > {% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt="Phase space diagram" caption="Simulation box at the start of the simulation" %}
-> > 
 > {: .solution}
 {: .challenge}
 
