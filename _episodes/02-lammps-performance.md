@@ -182,7 +182,7 @@ run on up to 128 cores.
 > {: .solution}
 {: .challenge}
 
-> ### Note!
+> ## Note!
 > Here are only considering MPI parallelisation -- LAMMPS offers the option 
 > to run using joint MPI+OpenMP (more on that later), but for the exercises 
 > in this lesson, we will only be considering MPI.
