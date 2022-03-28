@@ -1,7 +1,7 @@
 ---
 title: "Post-run analysis"
-teaching: 40
-exercises: 20
+teaching: 15
+exercises: 15
 questions:
 - "How do I write job submission scripts?"
 - "How do I control jobs?"

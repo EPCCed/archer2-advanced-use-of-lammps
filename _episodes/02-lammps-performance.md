@@ -1,7 +1,7 @@
 ---
 title: "Measuring and improving LAMMPS performance"
 teaching: 30
-exercises: 45
+exercises: 50
 questions:
 - "How can we run LAMMPS on ARCHER2?"
 - "How can we improve the performance of LAMMPS?"
@@ -39,10 +39,10 @@ command.
 module load PrgEnv-gnu
 module load cray-python
 
-export LAMMPS_DIR=/work/z19/z19/jsindt/LAMMPS_BUILD/mylammps/install
+export LAMMPS_DIR=/work/ta058/shared/lammps_build/
 export PATH=${PATH}:${LAMMPS_DIR}/bin
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${LAMMPS_DIR}/lib64
-export PYTHONPATH=${PYTHONPATH}:${LAMMPS_DIR}/lib/python3.9/site-packages
+export PYTHONPATH=${PYTHONPATH}:${LAMMPS_DIR}/lib/python3.8/site-packages
 ```
 
 The build instructions for this version are described in the next section of 
@@ -176,9 +176,6 @@ run on up to 128 cores.
 > > single core as when running on two cores. A more detailed look into the 
 > > `in.ethanol` file will reveal that this is because the simulation box is 
 > > not uniformly packed.
-> > At the start of the simulation (initial equilibration), the simulation box 
-> > looks like this:
-> > {% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt=""Simulation box at the start of the simulation" caption="Simulation box at the start of the simulation" %}
 > {: .solution}
 {: .challenge}
 
@@ -192,6 +189,8 @@ run on up to 128 cores.
 
 In the exercise above, you will (hopefully) have noticed that, while the 
 simulation run time decreases overall, the jump from 
+
+{% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt=""Simulation box at the start of the simulation" caption="Simulation box at the start of the simulation" %}
 
 ## Considering neighbour lists
 

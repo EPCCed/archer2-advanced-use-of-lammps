@@ -1,7 +1,7 @@
 ---
 title: "Using LAMMPS with Python"
-teaching: 45
-exercises: 15
+teaching: 20
+exercises: 25
 questions:
 - "What does the ARCHER2 software environment look like and how do I access software?"
 - "How can I find out what software is available?"
