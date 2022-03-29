@@ -190,7 +190,7 @@ run on up to 128 cores.
 In the exercise above, you will (hopefully) have noticed that, while the 
 simulation run time decreases overall, the jump from 
 
-{% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt=""Simulation box at the start of the simulation" caption="Simulation box at the start of the simulation" %}
+{% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt="Starting system configuration" caption="Starting system configuration" %}
 
 ## Considering neighbour lists
 
@@ -240,4 +240,3 @@ lists.
 - i don't think I have to tell you anything about how important benchmarking, especially scaling to large systems and many mpi ranks is and also how helpful careful profiling can be (the timing summary in LAMMPS is a good start but for particular problems one needs the real deal). on linux machines I have learned a lot from using kernel based profiling with "perf". sometimes just logging into the compute nodes and doing "perf top" can be very instructive. on the other hand, one can easily spend too much time on trying to squeeze the last bit of performance to make a calculation faster. this is often not worth the time. reaching 80% of the optimum can often be reached with 20% effort
 
 {% include links.md %}
-
