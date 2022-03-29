@@ -58,3 +58,4 @@ export PATH=${PATH}:${LAMMPS_DIR}/bin
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${LAMMPS_DIR}/lib64
 export PYTHONPATH=${PYTHONPATH}:${LAMMPS_DIR}/lib/python3.9/site-packages
 ```
+{% include links.md %}

@@ -1,0 +1,37 @@
+units           lj
+atom_style      atomic
+dimension       3
+boundary        p p p
+
+lattice         sc 0.01
+region          box block 0 40 0 40 0 40
+create_box      1 box
+create_atoms    1 box
+
+mass            1 1.0
+
+velocity        all create 1.0 199085 mom no
+
+pair_style      lj/cut 3.5
+pair_modify     shift yes
+pair_coeff      * * 1.0 1.0
+
+neighbor        0.3 bin
+neigh_modify    delay 0
+
+timestep        0.0005
+
+thermo_style    custom step temp etotal pe ke press vol density
+thermo          1000
+
+compute		RDF all rdf 150 cutoff 3.5
+fix		RDF_OUTPUT all ave/time 100 100 100000 c_RDF[*] file rdf_lj.out mode vector
+
+compute		MSD all msd
+fix		MSD_OUTPUT all ave/correlate 100 100000 100000 c_MSD[*] file msd_lj.out ave running
+
+compute		VACF all vacf
+fix		VACF_OUTPUT all ave/correlate 1 100000 100000 c_VACF[*] file vacf_lj.out ave running
+
+rerun		nvt.lammpstrj dump x y z vx vy vz
+

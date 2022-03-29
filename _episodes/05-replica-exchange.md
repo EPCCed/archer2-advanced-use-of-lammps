@@ -1,7 +1,7 @@
 ---
 title: "Replica exchange"
-teaching: 20
-exercises: 10
+teaching: 25
+exercises: 20
 questions:
 - "How can I be a responsible user?"
 - "How can I protect my data?"

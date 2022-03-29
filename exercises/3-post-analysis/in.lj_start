@@ -12,20 +12,25 @@ mass            1 1.0
 
 velocity        all create 1.0 199085 mom no
 
-pair_style      lj/cut 2.5
+pair_style      lj/cut 3.5
 pair_modify     shift yes
 pair_coeff      * * 1.0 1.0
 
 neighbor        0.3 bin
 neigh_modify    delay 0
 
-fix		LinMom all momentum 50 linear 1 1 1 angular
-fix		1 all nvt temp 1.00 1.00 5.0
+fix             LinMom all momentum 50 linear 1 1 1 angular
+fix             1 all nvt temp 1.00 1.00 5.0
 
 timestep        0.005
 
-thermo_style    custom step cpu temp etotal pe ke press vol density
+thermo_style    custom step cpu
 thermo          100
 
 run             100000
+
+dump            1 all custom 100 nvt.lammpstrj id type x y z vx vy vz
+dump_modify     1 sort id
+
+run 100000
 
