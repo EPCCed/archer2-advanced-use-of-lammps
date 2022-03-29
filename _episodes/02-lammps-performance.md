@@ -193,7 +193,20 @@ run on up to 128 cores.
 In the exercise above, you will (hopefully) have noticed that, while the 
 simulation run time decreases overall, the jump from 
 
-{% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt="Starting system configuration" caption="Starting system configuration" %}
+{% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt="Starting system configuration" %}
+
+{% include figure.html url="" max-width="80%" file="/fig/2_performance/balance.jpg" alt="LAMMPS balance methods" %}
+
+> ## Using better domain decomposition
+> 
+> In your `in.ethanol` file, uncomment the `fix balance` command and rerun 
+> your 2-core simulation. Does the runtime increase?
+> 
+> In this example, we're looking at the "tiled" `shift` balancing method. As 
+> part of this method, you can define the axis or plane along which the domain 
+> is decomposed. Does changing the plane from `xy` have any noticeable impact 
+> on runtime?
+{: .challenge}
 
 ## Considering neighbour lists
 
