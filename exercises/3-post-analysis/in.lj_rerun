@@ -27,11 +27,5 @@ thermo          1000
 compute		RDF all rdf 150 cutoff 3.5
 fix		RDF_OUTPUT all ave/time 100 100 100000 c_RDF[*] file rdf_lj.out mode vector
 
-compute		MSD all msd
-fix		MSD_OUTPUT all ave/correlate 100 100000 100000 c_MSD[*] file msd_lj.out ave running
-
-compute		VACF all vacf
-fix		VACF_OUTPUT all ave/correlate 1 100000 100000 c_VACF[*] file vacf_lj.out ave running
-
 rerun		nvt.lammpstrj dump x y z vx vy vz
 
