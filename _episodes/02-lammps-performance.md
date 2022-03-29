@@ -158,17 +158,20 @@ run on up to 128 cores.
 
 
 > ## Quick benchmark
+>
 > As a first exercise, fill in the table below.
-> |Number of cores| Walltime | Performance (ns/day) |
-> |---------------|----------|----------------------|
-> |   1  | | | |
-> |   2  | | | |
-> |   4  | | | |
-> |   8  | | | |
-> |  16  | | | |
-> |  32  | | | |
-> |  64  | | | |
-> | 128  | | | |
+> 
+>  |Number of cores| Walltime | Performance (ns/day) |
+>  |---------------|----------|----------------------|
+>  |   1  | | | |
+>  |   2  | | | |
+>  |   4  | | | |
+>  |   8  | | | |
+>  |  16  | | | |
+>  |  32  | | | |
+>  |  64  | | | |
+>  | 128  | | | |
+>
 > Do you spot anything unusual in these run times? If so, can you explain this 
 > strange result?
 > > ## Solution
@@ -179,7 +182,7 @@ run on up to 128 cores.
 > {: .solution}
 {: .challenge}
 
-> ## Note!
+> ## Note
 > Here are only considering MPI parallelisation -- LAMMPS offers the option 
 > to run using joint MPI+OpenMP (more on that later), but for the exercises 
 > in this lesson, we will only be considering MPI.
