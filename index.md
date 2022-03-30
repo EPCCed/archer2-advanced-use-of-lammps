@@ -23,9 +23,6 @@ root: .
 This lesson provides an overview of some more advanced techniques and uses of 
 LAMMPS. Specifically, we will be discussing:
   - Measuring and improving LAMMPS performance
-    + Strong vs weak scaling for a range of systems
-    + Smarter domain decomposition
-    + Accelerators and what they do
   - Using LAMMPS with Python
   - Analysing systems through reruns
   - Advanced sampling methods with a focus on replica exchange
