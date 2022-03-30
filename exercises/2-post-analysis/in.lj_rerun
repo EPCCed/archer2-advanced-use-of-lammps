@@ -3,7 +3,7 @@ atom_style      atomic
 dimension       3
 boundary        p p p
 
-lattice         sc 0.01
+lattice         sc 0.1
 region          box block 0 40 0 40 0 40
 create_box      1 box
 create_atoms    1 box
@@ -19,18 +19,13 @@ pair_coeff      * * 1.0 1.0
 neighbor        0.3 bin
 neigh_modify    delay 0
 
-fix             LinMom all momentum 50 linear 1 1 1 angular
-fix             1 all nvt temp 1.00 1.00 5.0
+timestep        0.0005
 
-timestep        0.005
+thermo_style    custom step temp etotal pe ke press vol density
+thermo          1000
 
-thermo_style    custom step cpu
-thermo          100
+compute		RDF all rdf 150 cutoff 3.5
+fix		RDF_OUTPUT all ave/time 100 1000 100000 c_RDF[*] file rdf_lj.out mode vector
 
-run             100000
-
-dump            1 all custom 100 nvt.lammpstrj id type x y z vx vy vz
-dump_modify     1 sort id
-
-run 100000
+rerun		nvt.lammpstrj dump x y z vx vy vz
 

@@ -122,7 +122,7 @@ sure to run this from `/work`):
 svn checkout https://github.com/EPCCed/archer2-advanced-use-of-lammps/trunk/exercises
 ```
 
-Once this is downloaded, please  `cd exercises/2-python/`. In this 
+Once this is downloaded, please  `cd exercises/4-python/`. In this 
 directory you will find three files:
 
   - `in.lj` is a LAMMPS input script to simulate a small Lennard-Jones gas.

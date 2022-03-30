@@ -14,8 +14,8 @@ module load cray-python
 export LAMMPS_DIR=/work/ta058/shared/lammps_build
 export PATH=${PATH}:${LAMMPS_DIR}/bin
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${LAMMPS_DIR}/lib64
-export PYTHONPATH=${PYTHONPATH}:${LAMMPS_DIR}/lib/python3.9/site-packages
+export PYTHONPATH=${PYTHONPATH}:${LAMMPS_DIR}/lib/python3.8/site-packages
 
 export OMP_NUM_THREAD=1
 
-srun -n 1 --cpus-per-task=1 lmp -i in.ethanol -l log.out 
+srun --tasks-per-node=128 --cpus-per-task=1 lmp -i in.lj -l log.out 

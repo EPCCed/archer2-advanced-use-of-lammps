@@ -2,9 +2,7 @@
 
 #SBATCH --job-name=lmp_py
 #SBATCH --nodes=1
-#SBATCH --tasks-per-node=128
-#SBATCH --cpus-per-task=1
-#SBATCH --time=0:2:0
+#SBATCH --time=0:5:0
 
 #SBATCH --account=ta058
 #SBATCH --partition=standard
@@ -20,4 +18,4 @@ export PYTHONPATH=${PYTHONPATH}:${LAMMPS_DIR}/lib/python3.8/site-packages
 
 export OMP_NUM_THREAD=1
 
-srun python lammps_lj.py
+srun --tasks-per-node=128 --cpus-per-task=1 python lammps_lj.py
