@@ -1,0 +1,10 @@
+plot "RG_histogram_T0.txt" using 2:4 skip 4 with lines
+replot "RG_histogram_T1.txt" using 2:4 skip 4 with lines
+replot "RG_histogram_T2.txt" using 2:4 skip 4 with lines
+replot "RG_histogram_T3.txt" using 2:4 skip 4 with lines
+replot "RG_histogram_T4.txt" using 2:4 skip 4 with lines
+replot "RG_histogram_T5.txt" using 2:4 skip 4 with lines
+replot "RG_histogram_T6.txt" using 2:4 skip 4 with lines
+replot "RG_histogram_T7.txt" using 2:4 skip 4 with lines
+replot "RG_histogram_T8.txt" using 2:4 skip 4 with lines
+replot "RG_histogram_T9.txt" using 2:4 skip 4 with lines

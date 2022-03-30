@@ -3,35 +3,21 @@ title: "Replica exchange"
 teaching: 25
 exercises: 20
 questions:
-- "How can I be a responsible user?"
-- "How can I protect my data?"
+- "What is replica exchange?"
+- "How can I run a replica exchange simulation in LAMMPS?"
+- "How can I analyze the output of a replica exchange simulation?"
 objectives:
-- "Learn how to be a considerate shared system citizen."
-- "Understand how to protect your critical data."
+- "Understand how to setup replica exchange simulations with suitable settings"
+- "Understand how to check analyze the output of a replica exchange simulation"
 keypoints:
-- "Be careful how you use the login node."
-- "Your data on the system is your responsibility."
-- "Again, don't run stuff on the login node."
-- "Don't be a bad person and run stuff on the login node."
+- "Choose the temperature scale carefully."
+- "Check the acceptance ratios and replica traversal."
+- "Make sure you reorder the trajectories before analyzing."
 ---
-
-# LAMMPS replica exchange example
-
 
 Introduction and example code for running replica exchange with 
 [LAMMPS](https://www.lammps.org/).
 
-The lesson is made for ARCHER2 so the Slurm submission scripts are specific to 
-[ARCHER2](https://www.archer2.ac.uk/). Furthermore, this lesson makes 
-reference to  a precompiled binary of LAMMPS with the REPLICA package enabled.
-This package is on ARCHER2 and will only work on ARCHER2.
-
-The rest of the content is generic. To get this to work on your local system, 
-you will need a version of LAMMPS built with the REPLICA package. 
-
-Lecture tested with LAMMPS version stable patch_29Sep2021_update2.
-
-Author: Stephen Farr, EPCC
 
 ## Table of Contents
    * [Replica exchange](#replica-exchange-also-called-parallel-tempering)
@@ -59,8 +45,7 @@ each with a different temperature, and periodically attempt to exchange which
 configurations are at which temperature. The higher temperatures allow the 
 system to overcome free energy barriers and therefore improve the sampling.
 
-{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/phase_space.png" alt="Phase space diagram" caption="Phase space diagram" %}
-
+{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/phase_space.png" alt="Phase space diagram"  %}
 
 The image shows how lower temperature systems in a rough potential energy 
 surface end up trapped in local minima. High temperature replicas can overcome 
@@ -71,28 +56,26 @@ The exchanges between replicas are computed using the Metropolis exchange
 criteria which gives the probability of accenting a swap between replicas 1 
 and 2:
 
-{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/metropolis_exchange.png" alt="Metropolis exchange" captiont="Metropolis exchange" %}
+{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/metropolis_exchange.png" alt="Metropolis exchange" %}
 
 For computational efficiency it is the temperatures that are swapped between replicas.
 
 ---
 ## Example system
 
-[https://github.com/sfarr-epcc/LAMMPS_replica_exchange_example.git](https://github.com/sfarr-epcc/LAMMPS_replica_exchange_example.git)
+The code for this section can be downloaded from the git repository:
 
-This folder contains an example for using replica exchange with LAMMPS. All 
-files are in the `example` folder.
+```bash
+svn checkout https://github.com/EPCCed/archer2-advanced-use-of-lammps/trunk/exercises
+cd exercises/4-replica-exchange-exercise
+```
 
-```
-git clone https://github.com/sfarr-epcc/LAMMPS_replica_exchange_example.git
-cd LAMMPS_replica_exchange_example
-cd example
-```
+
 
 We will use a toy system: A 50 particle bead-spring polymer. This is typical 
 of coarse-grain protein models.
 
-{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/polymer.png" alt="polymer.txt" caption="polymer.txt" %}
+{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/polymer.png" alt="polymer.txt" %}
 
 The data file `polymer.txt` contains the system topology. 
 
@@ -182,8 +165,8 @@ LAMMPS.
 In this example we have 10 replicas so 10 partitions must be used. An example 
 command to do this is:
 
-```
-mpirun -np 10 ./lmp_mpi -in run.in -partition 10x1
+```bash
+mpirun -np 10 lmp -in run.in -partition 10x1
 ```
 
 This will use 10 MPI processes to run 10 replicas of the simulation (1 MPI 
@@ -191,19 +174,26 @@ processes per replica).
 
 More MPI processes per replica can be used, for example
 
-```
-mpirun -np 20 ./lmp_mpi -in run.in -partition 10x2
+```bash
+mpirun -np 20 lmp -in run.in -partition 10x2
 ```
 
 will run the same parallel tempering simulation but use 2 MPI processes per 
 replica.
 
-Note that for this toy example of only 50 atoms there will be no parallel 
+For this toy example of only 50 atoms there will be no parallel 
 speedup from doing this.
 
-On ARCHER2 the provided batch script `run.slurm` will run this on the compute 
-nodes. Remember that ARCHER2 does not have `mpirun` and the only way to run 
-MPI programs is with ``srun`` on the compute nodes. 
+> ## Note
+> On ARCHER2 the provided batch script `run.slurm` will run this on the compute 
+> nodes. Remember that ARCHER2 does not have `mpirun` and the only way to run 
+> MPI programs is with ``srun`` on the compute nodes. 
+{: .callout}
+
+
+```bash
+sbatch run.slurm
+```
 
 ## Simulation output
 
@@ -227,6 +217,7 @@ Step T0 T1 T2 T3 T4 T5 T6 T7 T8 T9
 900 4 2 1 0 6 3 7 5 9 8
 1000 4 1 2 0 6 3 7 5 9 8
 ```
+{: .output}
 
 If we look at step 1000 we see that replica 0 has temperature index 4 (569.86 
 K), replica 2 has temperature index 1 (354.47), etc...
@@ -254,7 +245,8 @@ for optimal sampling. When we setup the temperate scale we aimed for an
 acceptance ratio of 30%. We have provided a python script to calculate the 
 acceptance ratio of the simulation.
 
-```
+```bash
+module load cray-python
 python acceptance.py
 ```
 
@@ -272,6 +264,7 @@ T indexes, Acceptance ratio
 7 - 8, 0.6203379662033797
 8 - 9, 0.8687131286871312
 ```
+{: .output}
 
 We see that the lower T index have a ratio close to 0.3 which is ideal, the 
 higher ones have a larger ratio, this is an artifact of our small toy system 
@@ -288,11 +281,13 @@ It is also important to check that the replicas are fully traversing
 temperature space. If you plot the columns of the master log file you will see 
 how the temperature index varies with the timestep.
 
-```
+``` bash
+module load gnuplot
+gnuplot
 gnuplot> plot "log.lammps" using 1:2 with lines
 ```
 
-{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/traversal.png" alt="Temperature traversal" caption="Temperature traversal" %}
+{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/traversal.png" alt="Temperature traversal" %}
 
 The plot on the left shows good traversal, the replica reaches T0 and T9 
 multiple times.
@@ -304,7 +299,7 @@ frequency to 10000).
 
 This can be done using the provided python script `reorder.py`
 
-```
+```bash
 python reorder.py polymer 10
 ```
 
@@ -312,7 +307,7 @@ Where the first argument is the prefix of the trajectory files and the second
 is the number of replicas.
 
 This will produce the reordered trajectories named `polymer.Tn.lammpstrj` 
-where `Tn` is the temperature index, i.e `T0` is the first termperature (300K
+where `Tn` is the temperature index, i.e `T0` is the first temperature (300K
 ), and `T1` is the second temperature (354.47K) etc.
 
 ## Analysing the constant temperature trajectories
@@ -320,6 +315,10 @@ where `Tn` is the temperature index, i.e `T0` is the first termperature (300K
 We can now analyse the reordered trajectories. This can be done using the 
 `rerun` command. If you move into the `rerun ` folder you will find the input 
 script `rerun.in`.
+
+```bash
+cd rerun
+```
 
 If you open it you will see some differences to the run script `run.in`. The 
 key parts are that the data file must still be read in. The pair and bond 
@@ -352,11 +351,15 @@ radius of gyration for each frame.
 To run this for all temperatures at once we can use the LAMMPS partition 
 switch again.
 
-```
-mpirun -np 10 lmp_mpi -in rerun.in -partition 10x1
+```bash
+mpirun -np 10 lmp -in rerun.in -partition 10x1
 ```
 
 For ARCHER2 the slurm script `rerun.slurm` is provided.
+
+```bash
+sbatch rerun.slurm
+```
 
 Note that this can be done in serial individually for each temperature. It is 
 trivially parallel as no communication is needed between the replicas we are 
@@ -375,7 +378,7 @@ variable I index 0
 
 And then run as normal
 
-```
+```bash
 lmp -in rerun.in
 ```
 
@@ -383,16 +386,16 @@ We now have the RG histograms for each temperature ``RG_histogram_Tn.txt``.
 
 They can be plotted using the provided gnuplot script
 
-```
+```bash
 gnuplot -p plot.gp
 ```
 
 On ARCHER2 remember to load the gnuplot module
-```
+```bash
 module load gnuplot
 ```
 
-{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/RG.png" alt="Plot of RG histograms" caption="Plot of RG histograms" %}
+{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/RG.png" alt="Plot of RG histograms" %}
 
 We can see that temperature index 0 (300K) has the most well defined peak with 
 the smallest radius of gyration. This typical of a globule like polymer state. 
@@ -406,10 +409,10 @@ The plot shows the enhanced sampling capabilities of parallel tempering. The
 extended high T configurations enable a greater exploration of the compact low 
 T configurations.
 
-{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/structures.png" alt="Polymer structures" caption="Polymer structures" %}
+{% include figure.html url="" max-width="80%" file="/fig/5_replica_exchange/structures.png" alt="Polymer structures" %}
 
 The low and high temperature configurations of the polymer are shown in the 
-image.
+image.S
 
 ## Further reading
 
