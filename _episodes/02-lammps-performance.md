@@ -80,6 +80,17 @@ directory you will find three files:
     template will be copied by the `in.lammps` file to generate our simulation 
     box.
 
+> ## Why ethanol?
+> 
+> The `in.ethanol` LAMMPS input that we are using for this exercise is an 
+> easily edited benchmark script used within EPCC to test system performance. 
+> The intention of this script is to be easy to edit and alter when running on 
+> very varied core/node counts. By editing the `X_LENGTH`, `Y_LENGTH`, and 
+> `Z_LENGTH` variables, you can increase the box size substantially. As to the 
+> choice of molecule, we wanted something small and with partial charges -- 
+> ethanol seemed to fit both of those.
+{: .callout}
+
 To submit your first job on ARCHER2, please run:
 
 ```bash
@@ -174,11 +185,14 @@ run on up to 128 cores.
 >
 > Do you spot anything unusual in these run times? If so, can you explain this 
 > strange result?
+> 
 > > ## Solution
+> > 
 > > The simulation takes almost the same amount of time when running on a 
 > > single core as when running on two cores. A more detailed look into the 
 > > `in.ethanol` file will reveal that this is because the simulation box is 
 > > not uniformly packed.
+> > 
 > {: .solution}
 {: .challenge}
 
@@ -190,23 +204,91 @@ run on up to 128 cores.
 
 ## Domain decomposition
 
-In the exercise above, you will (hopefully) have noticed that, while the 
-simulation run time decreases overall, the jump from 
+In the previous exercise, you will (hopefully) have noticed that, while the 
+simulation run time decreases overall as the core count is increased, the 
+run time was the same when run on one processor as it was when run on two 
+processors. This unexpected behaviour (for a truly strong-scaling system, you 
+would expect the simulation to run twice as fast on two cores as it does on a 
+single core) can be explained by looking at our starting simulation 
+configuration and understanding how LAMMPS handles domain decomposition.
+
+In parallel computing, domain decomposition describes the methods used to 
+split calculations across the cores being used by the simulation. How domain 
+decomposition is handled varies from problem to problem. In the field of 
+molecular dynamics (and, by extension, withing LAMMPS), this decomposition is 
+done through spatial decomposition -- the simulation box is split up into a 
+number of blocks, with each block being assigned to their own core.
+
+By default, LAMMPS will split the simulation box into a number of equally 
+sized blocks and assign one core per block. The amount of work that a given 
+core needs to do is directly linked to the number of atoms within its part of 
+the domain. If a system is of uniform density (i.e. if each block contains 
+roughly the same number of particles), then each core will do roughly the same 
+amount of work and will take roughly the same amount of time to calculate 
+interactions and move their part of the system forward to the next timestep. 
+If, however, your system is not evenly distributed, then you run the risk of 
+having a number of cores doing all of the work while the rest sit idle.
+
+The system we have been simulating looks like this at the start of the 
+simulation:
 
 {% include figure.html url="" max-width="80%" file="/fig/2_performance/start_sim_box.jpg" alt="Starting system configuration" %}
+
+As this is a system of non-uniform density, the default domain decomposition 
+will not produce the desired results.
+
+LAMMPS offers a number of methods to distribute the tasks more evenly across 
+the processors. If you expect the distribution of atoms within your simulation 
+to remain constant throughout the simulation, you can use a `balance` command 
+to run a one-off rebalancing of the simulation across the cores at the start 
+of your simulation. On the other hand, if you expect the number of atoms per 
+region of your system to fluctuate (e.g. as is common in evaporation), you may 
+wish to consider recalculating the domain decomposition every few timesteps 
+with the dynamic `fix balance` command.
+
+For both the static, one-off `balance` and the dynamic `fix balance` commands, 
+LAMMPS offers two methods of load balancing -- the "grid-like" `shift` method 
+and the "tiled" `rcb` method. The diagram below helps to illustrate how these 
+work.
 
 {% include figure.html url="" max-width="80%" file="/fig/2_performance/balance.jpg" alt="LAMMPS balance methods" %}
 
 > ## Using better domain decomposition
 > 
 > In your `in.ethanol` file, uncomment the `fix balance` command and rerun 
-> your 2-core simulation. Does the runtime increase?
+> your simulations. What do you notice about the runtimes? We are using the 
+> dynamic load balancing command -- would the static, one-off `balance` 
+> command be effective here?
 > 
-> In this example, we're looking at the "tiled" `shift` balancing method. As 
-> part of this method, you can define the axis or plane along which the domain 
-> is decomposed. Does changing the plane from `xy` have any noticeable impact 
-> on runtime?
+> > ## Solution
+> > 
+> > The runtimes decrease significantly when running with dynamic load 
+> > balancing. In this case, static load balancing would not work as the 
+> > ethanol is still expanding to fill the simulation box. Once the ethanol 
+> > is evenly distributed within the box, you can remove the dynamic load 
+> > balancing.
+> {: .solution}
 {: .challenge}
+
+> ## Playing around with dynamic load balancing
+> 
+> In the example, the `fix balance` is set to be recalculated every 1,000 
+> timesteps. How does the runtime vary as you change this value? I would 
+> recommend trying 10, 100, and 10,000.
+> 
+> > ## Solution
+> > 
+> > The simulation time can vary drastically depending on how often 
+> > rebalancing is carried out. When using dynamic rebalancing, there is an 
+> > important trade-off between the time gained from rebalancing and the cost 
+> > involved with recalculating the load balance among cores.
+> > 
+> {: .solution}
+{: .challenge}
+
+You can find more information about how LAMMPS handles domain decomposition in 
+the LAMMPS manual [balance](https://docs.lammps.org/balance.html) and 
+[fix balance](https://docs.lammps.org/fix_balance.html) sections.
 
 ## Considering neighbour lists
 
@@ -227,32 +309,148 @@ Other   |            | 0.139      |            |       |  0.07
 
 This output can provide us with a lot of valuable information about where our 
 simulation is taking a long time, and can help us assess where we can save 
-time. In the example above, we notice that the majority of the time is spent 
+time. In general, when running a new simulation on a multi-core system, three of 
+these values are worth particular attention (though all will tell you where 
+your system is spending most of its time):
+
+  - `Pair` indicates how much time is spent calculating pairwise particle
+    interactions. Ideally, when running a sensible system in a sensible 
+    fashion, timings will be dominated by this.
+  - `Neigh` will let you know how much time is being spent building up 
+    neighbour lists. As a rule of thumb, this should be in the 10-30% region.
+  - `Kspace` will let you know how much time is being spent calculating 
+    long-ranged interactions. Like with `Neigh`, this should be in the 10-30% 
+    range.
+  - `Comm` lets you know how much time is spent in communication between 
+    cores. This should never dominate simulation times and, if it does, this 
+    is the most obvious sign that too many computational recources are being 
+    assigned to run the simulation.
+
+In the example above, we notice that the majority of the time is spent 
 in the `Neigh` section -- e.g. a lot of time is spent calculating neighbour 
-lists.
+lists. Neighbour lists are a common method for speeding up simulations with 
+short-ranged particle-particle interactions. Most interactions are based on 
+interparticle distance and traditionally the distance between every particle 
+and every other particle would need to be calculated every timestep (this is 
+an O(N^2) calculation!). Neighbour lists are a way to reduce this to an ~O(N) 
+calculation for truncated short-ranged interactions. Instead of considering 
+all interactions between every particle in a system, you can generate a list 
+of all particles within the truncation cutoff plus a little bit more. 
+Depending on the size of that "little bit more" and the details of your 
+system, you can work out how quickly a particle that is not in this list can 
+move to be within the short-ranged interaction cutoff. With this time, you can 
+work out how frequently you need to update this list.
 
+{% include figure.html url="" max-width="80%" file="/fig/2_performance/neigh_list.jpg" alt="Neighbour lists explained" %}
 
+Doing this reduces the number of times that all interparticle distances need 
+to be calculated: every few timestep, the interparticle distances for all 
+particle pairs are calculated to generate the neighbour list for each 
+particle; and in the interim, only the interparticle distances for particles 
+within a neighbour list need be calculated (as this is a much smaller 
+proportion of the full system, this greatly reduces the total number of 
+calculations).
 
-## Further tips
+If we dig a bit deeper into our `in.ethanol` LAMMPS input file, we will notice 
+the following lines:
 
-### Shake
+```
+variable        NEIGH_TIME  equal      1    # neigh_modify every x dt
+...
+neigh_modify    delay 0 every ${NEIGH_TIME} check no
+```
+
+These lines together indicate that LAMMPS is being instructed to rebuild the 
+full neighbour list every timestep (so this is not a very good use of 
+neighbour lists).
+
+> ## Changing neighbour list update frequency
+> 
+> Change the `NEIGH_TIME` variable to equal 10. How does this affect the 
+> simulation runtime?
+> 
+> Now change the `NEIGH_TIME` variable to equal 1000. What happens now?
+{: .challenge}
+
+Neighbour lists only give physical solutions when the update time is less than 
+the time it would take for a particle outwith the neighbour cutoff to get to 
+within the short-ranged interaction cutoff. If this happens, the results 
+generated by the simulation become questionable at best and, in the worst 
+case, LAMMPS will crash.
+
+You can find more information in the LAMMPS manual about 
+[neighbour lists](https://docs.lammps.org/Developer_par_neigh.html) and the 
+[neigh_modify](https://docs.lammps.org/neigh_modify.html) command.
+
+## Some further tips
+
+### Fixing bonds and angles
+
+A lot of interesting system involve simulating particles bonded into 
+molecules. In a lot of classical atomistic systems, some of these bonds 
+fluctuate significantly and at high frequencies while not causing much 
+interesting physics (thing e.g. carbon-hydrogen bonds in a hydrocarbon chain). 
+As the timestep is restricted by the fastest-moving part of a simulation, the 
+frequency of fluctuation of these bonds restricts the length of the timestep 
+that can be used in the simulation. Using longer timesteps results in longer 
+"real time" effects being simulated for the same amount of compute power, so 
+being restricted to a shorter timestep because of "boring" bonds can be 
+frustrating.
+
+LAMMPS offers two methods of restricting these bonds (and their associated 
+angles): the `SHAKE` and `RATTLE` fixes. Using these fixes will ensure that 
+the desired bonds and angles are reset to their equilibrium length every 
+timestep. An additional constraint is applied to these atoms to ensure that 
+they can still move while keeping the bonds and angles as specified. This is 
+especially useful for simulating fast-moving bonds at higher timesteps.
+
+You can find more information about this in the 
+[LAMMPS manual](https://docs.lammps.org/fix_shake.html)
 
 ### Hybrid MPI+OpenMP runs
 
-- always study the timing summary. there is lots of useful information there. Pair should be dominant. When using KSpace optimum is often to have KSpace take less than 30%, often around 10%, similarly for Neigh.
+When looking at the LAMMPS profiling information, we briefly mentioned that 
+the proportion of time spent calculating `Kspace` should fall within the 
+10-30% region. `Kspace` can often come to dominate the time profile when 
+running with a large number of MPI ranks. This is a result of the way that 
+LAMMPS handles the decomposition of k-space across multiple MPI ranks.
 
--  Neigh can be adjusted with cutoff and neighbor list skin and update frequency. To find a good value for neigh_modify delay and every run with delay 0 every 1 check yes and look at the number of neighbor list builds. compute the average and use a delay that is safely less than that and then run with every 1 or 2 and check for dangerous builds. the system needs to be equilibrated. gains from tweaking skin are small unless cutoffs are short.
+One way to overcome this problem is to run your simulation using hybrid 
+MPI+OpenMP. To do this, you must ensure that you have compiled LAMMPS with the 
+`OMP` package. On ARCHER2, you can edit the `sub.slurm` file that you have been 
+using to include the following:
 
-- When running with GPU package acceleration, it is often better to leave KSpace on the CPU (since its acceleration potential is limited, but it can run concurrently to Pair (which is thus mostly "free" and one may increase the coulomb cutoff unless the time spent on Pair (with acceleration) matches Bond+KSpace.
+```bash
+export OMP_NUM_THREADS=2
+srun --tasks-per-node=64 --cpus-per-task=2 --exact \
+      lmp -sf omp -i in.ethanol -l ${OMP_NUM_THREADS}_log.out 
+```
 
-- For inhomogeneous systems or systems with large vacuum one needs to watch out for load imbalance. LAMMPS decomposes based on volume not density. the largest gain is often from using the processors keyword to adjust the processor grid. then one can consider the balance command, then fix balance and finally switching to tiled communication and decomposition. please see the new LAMMPS paper and/or the manual for some discussion of brick versus tiled.
+Setting the variable `OMP_NUM_THREADS` will let LAMMPS know how many OpenMP 
+threads will be used in the simulation. Setting `--tasks-per-node` and 
+`--cpus-per-task` will ensure that Slurm assigns the correct number of MPI 
+ranks and OpenMP threads to the executable. Setting the LAMMPS `--sf omp` flag 
+will result in LAMMPS using the `OMP` version of any command in your LAMMPS 
+input script.
 
-- MPI and domain decomposition is most of the time the most efficient parallelization. smaller subdomains bring also more cache efficiency, which does not apply to multi-threading. OpenMP should be used when there are many cores on a node so that MPI has bandwidth issues. OpenMP should be limited to a socket. Processor and memory affinity settings are also important (and can produce 10% or so difference in performance).
+Running hybrid jobs efficiently can add a layer of complications, and a number 
+of additional considerations must be taken into account to ensure the desired 
+results. Some of these are:
 
-- People should pay attention to not using too many MPI ranks. that can kill performance. biggest challenge for running large systems with many MPI ranks is KSpace due to having to do global transposes of the grids and - because lammps uses "pencils" - there is effectively only a 2d decomposition possible. Once KSpace becomes significant, it is better to use MPI+OpenMP to reduce the number of MPI ranks for KSpace. an additional option is to use run style verlet/split where a separate partition is assigned to KSpace and the rest can be run with a number of MPI ranks that is an integer multiple of the KSpace ranks.
+  - The product of the values assigned to `--tasks-per-node` and 
+    `--cpus-per-task`should be less than or equal to the number of cores on a 
+    node (on ARCHER2, that number is 128 cores).
+  - You should try to restrict the number of OpenMP threads per MPI task to 
+    fit on a single socket. For ARCHER2, the sockets (processors) are so large 
+    that they have been subdivided into a number of NUMA regions. Each ARCHER2 
+    node has 8 NUMA regions, each of which has 16 cores. Therefore, for an 
+    efficient LAMMPS run, you would not want to use more than 16 OpenMP 
+    processes per MPI tasl.
+  - In a similar vein to the above, you also want to make sure that your 
+    OpenMP threads are kept within a single NUMA region -- spanning across 
+    multiple NUMA regions will decrease the performance (significantly).
 
-- a particular pet peeve of mine are people that suffer from "premature optimization", i.e. they worry about efficiency of something that doesn't contribute much before even having figured out how to run their system and also people that run too large systems right  away without knowing anything. good planning is key to successful research with efficient usage of resources. a frequent example are people that equilibrate a bulk liquid to save time for a calculation of a slab system, but then run into issues with image flags and complete disregard that switching from periodic to non-periodic boundaries is a drastic change that usually requires more time and effort to be dissipated and re-equilibrated than what was potentially saved. better to start with non-periodic right away and add a wall fix to contain particles.
-
-- i don't think I have to tell you anything about how important benchmarking, especially scaling to large systems and many mpi ranks is and also how helpful careful profiling can be (the timing summary in LAMMPS is a good start but for particular problems one needs the real deal). on linux machines I have learned a lot from using kernel based profiling with "perf". sometimes just logging into the compute nodes and doing "perf top" can be very instructive. on the other hand, one can easily spend too much time on trying to squeeze the last bit of performance to make a calculation faster. this is often not worth the time. reaching 80% of the optimum can often be reached with 20% effort
+These are only some of the things to bear in mind when considering using 
+hybrid MPI+OpenMP to speed up k-space calculations. 
 
 {% include links.md %}
