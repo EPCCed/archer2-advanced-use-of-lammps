@@ -453,4 +453,17 @@ results. Some of these are:
 These are only some of the things to bear in mind when considering using 
 hybrid MPI+OpenMP to speed up k-space calculations. 
 
+> ## Using `verlet/split` instead
+>
+> Another way to decrease the amount of compute being used by k-space 
+> calculations is to use the `run_style verlet/split` command -- this 
+> lets you split your force calculations across two partitions of cores. Using 
+> this would let you define the partitions (and the amount of computational 
+> resources assigned to this partition) on which long-ranged k-space 
+> interactions are calculated.
+> 
+> You can find out more about this in the 
+> [LAMMPS manual](https://docs.lammps.org/run_style.html)
+{: .callout}
+
 {% include links.md %}

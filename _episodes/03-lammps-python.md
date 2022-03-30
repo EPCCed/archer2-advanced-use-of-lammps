@@ -1,5 +1,5 @@
 ---
-title: "Using LAMMPS with Python"
+title: "Compiling LAMMPS and using it with Python"
 teaching: 20
 exercises: 25
 questions:

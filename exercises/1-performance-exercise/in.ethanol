@@ -6,13 +6,12 @@ variable        TEMPERATURE equal    300.0  # Temperature in K
 variable        PRESSURE    equal     10.0  # Pressure in atm 
 variable        TIMESTEP    equal      1.0  # dt in fs
 variable        NEIGH_TIME  equal      1    # neigh_modify every x dt
-variable        NVT_TIME    equal   1000    # equilibrate system for # timesteps in NVT
-variable        EQUIL_TIME  equal  10000    # equilibrate system for # timesteps in NPT
+variable        EQUIL_TIME  equal   1000    # equilibrate system for # timesteps in NVT
 variable        PROD_TIME   equal  10000    # run simulation for # timesteps in total
 variable	OUT_TIME    equal   1000    # dt between thermo output
-variable	X_LENGTH    equal      5    # length of x side of the box
-variable	Y_LENGTH    equal      5    # length of y side of the box
-variable	Z_LENGTH    equal      5    # length of z side of the box
+variable	X_LENGTH    equal      8    # length of x side of the box
+variable	Y_LENGTH    equal      8    # length of y side of the box
+variable	Z_LENGTH    equal      8    # length of z side of the box
 
 ##################################################################################
 #                                 Code                                           #
@@ -24,8 +23,8 @@ dimension       3
 boundary        p p p
 
 lattice         sc 6.000
-variable        box_length equal ${Z_LENGTH}*3
-region          box block 0 ${X_LENGTH} 0 ${box_length} 0 ${Z_LENGTH}
+variable        box_length equal ${Z_LENGTH}*2
+region          box block 0 ${box_length} 0 ${box_length} 0 ${box_length}
 region          start_box block 0 ${X_LENGTH} 0 ${Y_LENGTH} 0 ${Z_LENGTH}
 create_box      6 box bond/types 5               &
                       angle/types 7              &
@@ -114,11 +113,6 @@ thermo_style    custom step cpu temp etotal epair elong evdwl vol lx press
 thermo		${OUT_TIME}
 
 timestep	${TIMESTEP}
-
-run		${NVT_TIME}
-
-unfix		1
-fix             1 all npt temp ${TEMPERATURE} ${TEMPERATURE} 20.0 iso ${PRESSURE} ${PRESSURE} 30.0
 
 run		${EQUIL_TIME}
 
