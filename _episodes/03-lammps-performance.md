@@ -1,6 +1,6 @@
 ---
-title: "Measuring and improving LAMMPS performance"
-teaching: 20
+title: "Measuring and improving LAMMPS performance (continued)"
+teaching: 30
 exercises: 30
 questions:
 - "How can we run LAMMPS on ARCHER2?"

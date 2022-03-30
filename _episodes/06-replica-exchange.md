@@ -1,7 +1,7 @@
 ---
 title: "Replica exchange"
-teaching: 25
-exercises: 20
+teaching: 30
+exercises: 30
 questions:
 - "What is replica exchange?"
 - "How can I run a replica exchange simulation in LAMMPS?"
