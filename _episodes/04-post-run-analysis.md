@@ -69,9 +69,9 @@ To run the initial `in.lj` simulation, run:
 The simulation will generate a LAMMPS trajectory file called `nvt.lammpstrj` 
 that we will be using to run our `rerun` simulation.
 
-You can run the `rerun` simulation from the login node -- it is quick, not 
-computationally intensive, does not require much memory, and can be run on a 
-single core. To run the rerun simulation, run the following commands:
+You can run the `rerun` simulation from the serial nodes as this is a quick, 
+not computationally intensive simulation that can be run on a single core. To 
+run the rerun simulation, run the following commands:
 
   ```bash
   module load PrgEnv-gnu
@@ -82,7 +82,8 @@ single core. To run the rerun simulation, run the following commands:
   export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${LAMMPS_DIR}/lib64
   export PYTHONPATH=${PYTHONPATH}:${LAMMPS_DIR}/lib/python3.9/site-packages
   
-  lmp -i in.lj_rerun -l log.rerun
+  srun -n 1 --time=0:5:0 --partition=serial --qos=serial --account=ta058 \
+       lmp -i in.lj_rerun -l log.rerun
   ```
 
 In this example, we are using this rerun to generate two new bits of information:

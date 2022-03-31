@@ -3,92 +3,74 @@ title: "Next steps"
 teaching: 15
 exercises: 0
 questions:
-- "Where can I get further help on using ARCHER2?"
-- "What other training is available to me?"
-- "How can I get access to ARCHER2 for my research?"
+- "Where can I get further information about LAMMPS?"
+- "Where can I find out more about ARCHER2?"
 objectives:
-- "Be aware of the available ARCHER2 documentation."
-- "Be aware of what other training is available."
-- "Be aware of the ARCHER2 access routes."
+- "Be aware of the available LAMMPS documentation."
+- "Be aware of what other training is available through the ARCHER2 program."
 keypoints:
-- "ARCHER2 has a lot of documentation available."
-- "There are lots of training opportunities available."
+- "The LAMMPS manual is very easy to understand and provides a number of 
+  useful resources for learning about LAMMPS."
+- "You will retain access to ARCHER2 for a while -- please make use of it to 
+  test LAMMPS more."
 - "You can get access to ARCHER2 resources via a number of different routes."
 ---
 
-## ARCHER2 Service Desk
+## LAMMPS resources
 
-Contacting the ARCHER2 Service Desk is the easiest way to get in touch with the service to ask
-any questions you have or report issues with your use of the service. You can contact the 
-ARCHER2 Service Desk at: [support@archer2.ac.uk](mailto:support@archer2.ac.uk).
+The [LAMMPS manual](https://docs.lammps.org/Manual.html) is, in my opinion, a 
+very well written manual with a lot of information about the various 
+functionalities of LAMMPS. It is my go-to when I want to learn how to run a 
+LAMMPS command, or when I want to understand how LAMMPS implements a specific 
+functionality.
 
-If you have a particular issue that you would like to discuss in more depth with an expert
-from the ARCHER2 CSE service you can book a callback from them at a time of your convenience
-<!-- (**TODO** add in hours that this can be requested in).-->
-Please contact the service desk if you
-want to book a callback with a description of what you want to discuss and your preferred
-time(s) for a callback.
+In this manual, there is a handy [How-to](https://docs.lammps.org/Howto.html) 
+section. You can find a number of tutorials in there for understaning and 
+running various simulations.
 
-## Documentation
+The [LAMMPS example scripts](https://docs.lammps.org/Examples.html) that come 
+with the source code are an excellent source of inspiration and a great 
+starting point for testing ideas. When I want to understand how to use a 
+function, I will check whether there is an exercise that uses said function 
+and use that as a template to get my system to work.
 
-The ARCHER2 service has extensive documentation available at:
+Finally, there is the [LAMMPS mailing list](https://matsci.org/c/lammps/40). 
+You can post questions to this list to have them answered by other members of 
+the LAMMPS community and by the LAMMPS developers. A lot of repeat questions 
+get asked there, so before you post your question, have a look through the 
+records to check that someone has not already asked it.
 
-* [ARCHER2 Documentation](https://docs.archer2.ac.uk)
+## ARCHER2 resources
 
-This documentation covers:
+If you attended the live course, you will retain access to your `ta058` 
+account (with a small amount of budget) for a couple of months following the 
+course. This is to allow you to make sure that you understood all of the 
+course materials and have an opportunity to run any of the exercise 
+simulations that you did not have time to complete in the training lesson. 
+This is also to let you test out your own simulations on ARCHER2.
 
-* Quickstart Guides to using ARCHER2 for users who wish to use pre-installed software and users
-  who want to compile and develop their own software.
-* ARCHER2 User and Best Practice Guide covering all aspects of the service with basic information
-  to allow you to use the service effectively for your research and more advanced technical topics
-  to help you improve your use of the service.
-* Information on the research software and software libraries available on the service.
-* Information on how to use the EPCC SAFE web administration tool.
+If you have any questions about using ARCHER2, the first port of call is the 
+[ARCHER2 manual](https://docs.archer2.ac.uk/). This manual covers a number of 
+aspects of using ARCHER2, from the more simple ""ow to I get a program to run" 
+to the more complex "How can I debug my software efficiently on a 
+supercomputer".
+
+If you cannot find the answer to your question, please contact the ARCHER2 
+support team by email at support@archer2.ac.uk.
 
 ## ARCHER2 Training
 
-There is also lots of training available through the ARCHER2 service covering many different topics
-and to suit many different levels. Following on from this course, you may be particularly interested in:
+There is lots of training matieral available through the ARCHER2 service 
+covering many different topics and to suit many different levels of 
+experience. 
 
-* Using package X efficiently on ARCHER2 - these are a series of courses covering some of the major modelling and
-  simulation software packages used on ARCHER2 that cover how to get the most out of the ARCHER2 
-  system when using that particular software.
-* Software/Data Carpentry - improve your software and data analysis skills with these official
-  [Carpentries](https://www.carpentries.org) courses.
-* Reproducible computational environments using containers - this course provides an introduction to the use of Containers in a research setting.
+Details of courses, the upcoming schedule and information on how to register 
+can be found in the 
+[ARCHER2 training pages](https://www.archer2.ac.uk/training/).
 
-Details of courses, the upcoming schedule and information on how to register can be found on
-[the ARCHER2 training pages](https://www.archer2.ac.uk/training/).
-
-## Getting access to ARCHER2 for your research
-
-There are a number of different routes to obtain access to ARCHER2 resources.
-
-The simplest and easiest way to get access to small amounts of resource to test ARCHER2 for your
-research is via the [ARCHER2 Driving Test](https://www.archer2.ac.uk/training/driving-test.html). 
-The Driving Test is a short online quiz that, once completed, gives UK-based researchers the
-ability to apply for a small amount of ARCHER2 time for use for their research.
-
-Other potential access routes include:
-
-* Access Through [the EPSRC/NERC Scientific Consortia](https://www.archer2.ac.uk/research/consortia/) - Time for projects within consortia remits. Often the simplest method of getting access if your research is in the remit of one of the consortia.
-* ARCHER2 pump-priming - Small amounts of time to test ARCHER, provide proof of concept, or obtain scaling information for full applications (EPSRC remit science only).
-* ARCHER2 resources via research grants - larger amounts of time associated with the research project proposed. How this works depends on the grant awarding body.
-* UKRI Access to HPC resource calls - large amounts of resource for up to a year.
-
-More information on these access routes is available on
-[the ARCHER2 access page](https://www.archer2.ac.uk/support-access/access.html)
-
-## eCSE: help with improving and adding functionality to research software
-
-The ARCHER2 embedded computational science and engineering (eCSE) programme provides funding 
-for you or a research software engineer (RSE) of your choice to improve or add functionality
-to research software on ARCHER2. To find out more about the eCSE programme and how to apply,
-see [the ARCHER2 eCSE pages](https://www.archer2.ac.uk/ecse/)
-
-## Acknowledging ARCHER2
-
-<!-- **TODO** Add ARCHER2 DOI -->
+You can also find course material (and sometimes recordings) for previous 
+ARCHER2 courses in the 
+[ARCHER2 course repository](https://www.archer2.ac.uk/training/materials/)
 
 {% include links.md %}
 

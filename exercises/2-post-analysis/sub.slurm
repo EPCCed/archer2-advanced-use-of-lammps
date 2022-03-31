@@ -18,4 +18,4 @@ export PYTHONPATH=${PYTHONPATH}:${LAMMPS_DIR}/lib/python3.8/site-packages
 
 export OMP_NUM_THREAD=1
 
-srun --tasks-per-node=128 --cpus-per-task=1 lmp -i in.lj -l log.out 
+srun --tasks-per-node=128 --cpus-per-task=1 lmp -i in.lj_start -l log.out 
