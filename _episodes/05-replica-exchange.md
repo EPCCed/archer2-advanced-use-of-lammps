@@ -67,7 +67,7 @@ The code for this section can be downloaded from the git repository:
 
 ```bash
 svn checkout https://github.com/EPCCed/archer2-advanced-use-of-lammps/trunk/exercises
-cd exercises/4-replica-exchange-exercise
+cd exercises/3-replica-exchange-exercise
 ```
 
 
