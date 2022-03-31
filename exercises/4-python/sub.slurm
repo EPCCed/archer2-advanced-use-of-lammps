@@ -16,6 +16,6 @@ export PATH=${PATH}:${LAMMPS_DIR}/bin
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${LAMMPS_DIR}/lib64
 export PYTHONPATH=${PYTHONPATH}:${LAMMPS_DIR}/lib/python3.8/site-packages
 
-export OMP_NUM_THREAD=1
+export OMP_NUM_THREADS=1
 
 srun --tasks-per-node=128 --cpus-per-task=1 python lammps_lj.py
