@@ -21,7 +21,7 @@ bond_coeff	1 10.0 3.8
 special_bonds	lj 0.0 1.0 1.0
 
 neighbor	2.0 bin
-
+neigh_modify    delay 1 every 1 check yes
 
 fix 1 all nve
 fix 2 all langevin ${T} ${T} 1000 ${SEED}
