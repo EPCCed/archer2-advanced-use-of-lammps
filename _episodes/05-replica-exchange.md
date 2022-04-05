@@ -247,7 +247,7 @@ acceptance ratio of the simulation.
 
 ```bash
 module load cray-python
-python acceptance.py
+python acceptance_ratio.py
 ```
 
 Output:
