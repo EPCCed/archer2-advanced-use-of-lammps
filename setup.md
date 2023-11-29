@@ -1,4 +1,5 @@
 ---
+layout: page
 title: Setup
 ---
 
@@ -16,4 +17,3 @@ Any problems encountered will be addressed as the first part of the course.
 
 
 {% include links.md %}
-
