@@ -1,3 +1,4 @@
+[archer2-tcoc]: https://www.archer2.ac.uk/about/policies/code-of-conduct.html
 [cc-by-human]: https://creativecommons.org/licenses/by/4.0/
 [cc-by-legal]: https://creativecommons.org/licenses/by/4.0/legalcode
 [ci]: http://communityin.org/

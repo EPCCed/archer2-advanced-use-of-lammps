@@ -3,4 +3,4 @@ title: "Lunch"
 break: 60
 ---
 
-Lunch
+Break for lunch.
