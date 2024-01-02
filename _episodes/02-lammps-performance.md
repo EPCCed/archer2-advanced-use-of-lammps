@@ -21,11 +21,10 @@ keypoints:
 LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a versatile classical molecular dynamics software package,
 developed by Sandia National Laboratories and by its wide user-base.
 
-It can be downloaded from 
-[https://lammps.sandia.gov/download.html](https://lammps.sandia.gov/download.html)
+It can be downloaded directly from the [sandia website][lammps-download].
 
 Everything we are covering today (and a lot of other info) can be found in the 
-[LAMMPS User Manual](https://lammps.sandia.gov/doc/Manual.html)
+[LAMMPS User Manual][lammps-docs].
 
 ## Running LAMMPS on ARCHER2
 
@@ -33,11 +32,10 @@ ARCHER2 uses a module system.
 In general, you can run LAMMPS on ARCHER2 by using the LAMMPS module:
 
 ```bash
-ta058js@ln03:~> module avail lammps
+ta132ra@ln01:~> module avail lammps
 
 ------------------- /work/y07/shared/archer2-lmod/apps/core -------------------
-   lammps/29_Sep_2021
-
+   lammps/17Feb2023
 ```
 
 Running `module load lammps` will set up your environment to use LAMMPS.
@@ -48,7 +46,7 @@ We have built a version of LAMMPS that can be accessed by ensuring that the foll
 module load PrgEnv-gnu
 module load cray-python
 
-export LAMMPS_DIR=/work/ta058/shared/lammps_build/
+export LAMMPS_DIR=/work/ta132/shared/lammps_build/
 export PATH=${PATH}:${LAMMPS_DIR}/bin
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${LAMMPS_DIR}/lib64
 export PYTHONPATH=${PYTHONPATH}:${LAMMPS_DIR}/lib/python3.8/site-packages
@@ -63,13 +61,13 @@ Note that you will only be able to run this on a single core on the ARCHER2 logi
 
 To run LAMMPS on multiple cores/nodes, you will need to submit a job to the ARCHER2 compute nodes.
 The compute nodes do not have access to the landing `home` filesystem -- this filesystem is to store useful/important information.
-On ARCHER2, when submitting jobs to the compute nodes, make sure that you are in your `/work/ta058/ta058/<username>` directory.
+On ARCHER2, when submitting jobs to the compute nodes, make sure that you are in your `/work/ta132/ta132/<username>` directory.
 
 For this course, we have prepared a number of exercises.
 You can get a copy of these exercises by running (make sure to run this from `/work`):
 
 ```bash
-svn checkout https://github.com/EPCCed/archer2-advanced-use-of-lammps/trunk/exercises
+git clone --depth=1 git@github.com:EPCCed/archer2-advanced-use-of-lammps.git
 ```
 
 Once this is downloaded, please `cd exercises/1-performance-exercise/`.

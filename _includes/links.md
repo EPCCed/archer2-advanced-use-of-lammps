@@ -35,6 +35,8 @@
 [jekyll]: https://jekyllrb.com/
 [jupyter]: https://jupyter.org/
 [kramdown]: https://kramdown.gettalong.org/
+[lammps-docs]: https://lammps.sandia.gov/doc/Manual.html
+[lammps-download]: https://lammps.sandia.gov/download.html
 [lc-issues]: https://github.com/issues?q=user%3Alibrarycarpentry
 [lc-lessons]: https://librarycarpentry.org/lessons/
 [lc-site]: https://librarycarpentry.org/

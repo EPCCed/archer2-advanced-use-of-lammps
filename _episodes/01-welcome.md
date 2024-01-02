@@ -9,14 +9,14 @@ questions:
 objectives:
 - "Understand how this course works, how I can get help and how I can give feedback."
 keypoints:
-- "We should all understand and follow the [ARCHER2 Code of Conduct](https://www.archer2.ac.uk/training/code-of-conduct/) to ensure this course is conducted in the best teaching environment."
+- "We should all understand and follow the [ARCHER2 Code of Conduct][archer2-tcoc] to ensure this course is conducted in the best teaching environment."
 - "The course will be flexible to best meet the learning needs of the attendees."
 - "Feedback is an essential part of our training to allow us to continue to improve and make sure the course is as useful as possible to attendees."
 ---
 
 ## Course structure and method
 
-Rather than having separate lectures and practical sessions, this course is taught following [The Carpentries methodology](https://carpentries.org),
+Rather than having separate lectures and practical sessions, this course is taught following [The Carpentries methodology][c-site],
 where we all work together through material learning key skills and information throughout the course.
 Typically, this follows the method of the instructor demonstrating and then the attendees doing along with the instructor.
 
@@ -48,4 +48,3 @@ Finally, you will be provided with the opportunity to provide feedback on the co
 We welcome all this feedback, both good and bad, as this information in key to allow us to continually improve the training we offer.
 
 {% include links.md %}
-
