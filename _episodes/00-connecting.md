@@ -9,7 +9,7 @@ objectives:
 keypoints:
 - "ARCHER2's login address is `login.archer2.ac.uk`."
 - "You have to change the default text password the first time you log in"
-- "MFA is now mandatory in ARCHER2"
+- "MFA is mandatory in ARCHER2"
 ---
 
 ## Purpose
@@ -19,7 +19,7 @@ You will have the ability to request an account and to login to ARCHER2 before t
 If you are not able to login, you can come to this pre-session where the instructors will help make sure you can login to ARCHER2.
 
 Note that if you are not able to login to ARCHER2, and do not attend this session,
-you may struggle to run the course excercises as these were designed to run on ARCHER2 specifically.
+you may struggle to run the course exercises as these were designed to run on ARCHER2 specifically.
 
 ## Connecting using SSH
 
@@ -48,7 +48,7 @@ See the ARCHER2 User and Best Practice Guide for information on how to create SS
 
 ## TOTP/MFA
 
-ARCHER2 accounts are now required to use timed one-time passwords (TOTP), as part of a multi-factor authorization (MFA) system.
+ARCHER2 accounts are now required to use timed one-time passwords (TOTP), as part of a multi-factor authorisation (MFA) system.
 Instructions on how to add MFA authentication to a machine account on SAFE can be found [here][safe-machine-mfa].
 
 ## Data transfer services: scp, rsync, Globus Online

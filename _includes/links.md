@@ -1,9 +1,12 @@
 {% include base_path.html %}
 [archer2-connecting]: https://docs.archer2.ac.uk/user-guide/connecting/
 [archer2-data]: https://docs.archer2.ac.uk/user-guide/data/
+[archer2-docs]: https://docs.archer2.ac.uk/
 [archer2-password]: https://www.archer2.ac.uk/about/policies/passwords_usernames.html
 [archer2-quickstart]: https://docs.archer2.ac.uk/quick-start/quickstart-users/
 [archer2-tcoc]: https://www.archer2.ac.uk/about/policies/code-of-conduct.html
+[archer2-training]: https://www.archer2.ac.uk/training/
+[archer2-training-materials]: https://www.archer2.ac.uk/training/materials/
 [archer2-website]: https://www.archer2.ac.uk/
 [c-site]: https://carpentries.org/
 [cc-by-human]: https://creativecommons.org/licenses/by/4.0/

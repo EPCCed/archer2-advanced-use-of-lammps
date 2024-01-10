@@ -26,7 +26,8 @@ The instructor will also provide many opportunities to pause and ask questions.
 
 We will also make use of a shared collaborative document - the *etherpad*.
 You will find a link to this collaborative document on the course page.
-We will use it for a number of different purposes, for example, it may be used during exercises and instructors and helpers may put useful information,
+We will use it for a number of different purposes, for example,
+it may be used during exercises and instructors and helpers may put useful information,
 or links in the etherpad that help or expand on the material being taught.
 If you have useful information to share with the class then please do add it to the etherpad.
 At the end of the course, we take a copy of the information in the etherpad,
