@@ -1,7 +1,7 @@
 ---
 layout: lesson
 carpentry: "swc"
-venue: 
+venue: "online"
 address: 
 country: "UK"
 language: "English"
@@ -10,9 +10,9 @@ humandate:
 humantime: 
 startdate: 
 enddate: 
-instructor: ["Julien Sindt and Stephen Farr"]
-helper: ["Andy Turner"]
-email: ["J.Sindt@epcc.ed.ac.uk"]
+instructor: ["Rui Apóstolo"]
+helper: ["TBD"]
+email: ["R.Apostolo@epcc.ed.ac.uk"]
 collaborative_notes: 
 eventbrite: 
 root: .

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#SBATCH --job-name=lammps_remd
+#SBATCH --job-name=lmp_bench
 #SBATCH --nodes=1
-#SBATCH --tasks-per-node=10
+#SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=1
-#SBATCH --time=00:10:00
+#SBATCH --time=0:20:0
 
 #SBATCH --account=z19
 #SBATCH --partition=standard
@@ -14,5 +14,5 @@ module load lammps/15Dec2023
 
 export OMP_NUM_THREADS=1
 export SRUN_CPUS_PER_TASK=$SLURM_CPUS_PER_TASK
-
-srun --distribution=block:block --hint=nomultithread lmp -in run.in -partition 10x1
+	
+srun lmp -in in.ethanol -l log.out 

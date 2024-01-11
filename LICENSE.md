@@ -3,6 +3,7 @@ layout: page
 title: "Licences"
 root: .
 ---
+
 ### Context
 This is not an official lesson of the Carpentries, however the licencing approach that the Carpentries take is ideal, so much of the material below resembles the Carpentries' documentation, where this is appropriate.
 

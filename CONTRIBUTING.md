@@ -55,7 +55,7 @@ and to meet some of our community members.
 2.  If you wish to change the example lesson,
     please work in <https://github.com/carpentries/lesson-example>,
     which documents the format of our lessons
-    and can be viewed at <https://carpentries.github.io/lesson-example>.
+    and can be viewed [here][lesson-example].
 
 3.  If you wish to change the template used for workshop websites,
     please work in <https://github.com/carpentries/workshop-template>.
@@ -65,7 +65,7 @@ and to meet some of our community members.
 
 4.  If you wish to change CSS style files, tools,
     or HTML boilerplate for lessons or workshops stored in `_includes` or `_layouts`,
-    please work in <https://github.com/carpentries/styles>.
+    please work in [styles][styles].
 
 ## What to Contribute
 
@@ -120,19 +120,4 @@ your clone of the originating `gh-pages` branch.
 Lastly, published copies of all the lessons are available in the `gh-pages` branch of the originating
 repository for reference while revising.
 
-[email]: mailto:dme@cs.otago.ac.nz
-[dc-issues]: https://github.com/issues?q=user%3Adatacarpentry
-[dc-lessons]: http://datacarpentry.org/lessons/
-[dc-site]: http://datacarpentry.org/
-[discuss-list]: http://lists.software-carpentry.org/listinfo/discuss
-[github]: https://github.com
-[github-flow]: https://guides.github.com/introduction/flow/
-[github-join]: https://github.com/join
-[how-contribute]: https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github
-[issues]: https://guides.github.com/features/issues/
-[swc-issues]: https://github.com/issues?q=user%3Aswcarpentry
-[swc-lessons]: https://software-carpentry.org/lessons/
-[swc-site]: https://software-carpentry.org/
-[c-site]: https://carpentries.org/
-[lc-site]: https://librarycarpentry.org/
-[lc-issues]: https://github.com/issues?q=user%3Alibrarycarpentry
+{% include links.md %}
