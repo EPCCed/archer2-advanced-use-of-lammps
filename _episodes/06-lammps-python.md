@@ -72,10 +72,17 @@ Of note here:
     the MPI version of LAMMPS is built,
     and that it has access to the correct fast Fourier transform (FFTW) and Eigen3 libraries.
 
-Once this is built, you should be able to run LAMMPS from the compute nodes by loading the appropriate module.
+Once this is built, you should be able to run LAMMPS from the compute nodes by loading the python virtual environment and adding the LAMMPS binary to the `$PATH`.
+But, in this course we will be using the `lammps-python` module available in ARCHER2.
 
 
 ## Running LAMMPS through Python
+
+After loading the module:
+
+```bash
+module load lammps-python
+```
 
 Running LAMMPS through Python is quite a simple task: you can import the LAMMPS Python library, start the LAMMPS environment, and run a LAMMPS simulation by running the following commands:
 
@@ -102,7 +109,7 @@ For this course, we have prepared a number of exercises.
 If you have not already done so, you can get a copy of these exercises by running (make sure to run this from `/work`):
 
 ```bash
-svn checkout https://github.com/EPCCed/archer2-advanced-use-of-lammps/trunk/exercises
+git clone --depth=1 https://www.github.com/EPCCed/archer2-advanced-use-of-lammps.git
 ```
 
 Once this is downloaded, please `cd exercises/4-python/`.

@@ -60,7 +60,7 @@ For computational efficiency, it is the temperatures that are swapped between re
 The code for this section can be downloaded from the git repository:
 
 ```bash
-git clone --depth=1 git@github.com:EPCCed/archer2-advanced-use-of-lammps.git
+git clone --depth=1 https://www.github.com/EPCCed/archer2-advanced-use-of-lammps.git
 cd exercises/3-replica-exchange-exercise
 ```
 
