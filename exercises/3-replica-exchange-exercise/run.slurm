@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --time=00:10:00
 
-#SBATCH --account=z19
+#SBATCH --account=ta132
 #SBATCH --partition=standard
 #SBATCH --qos=short
 

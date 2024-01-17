@@ -60,7 +60,7 @@ For this course, we have prepared a number of exercises.
 You can get a copy of these exercises by running (make sure to run this from `/work`):
 
 ```bash
-git clone --depth=1 git@github.com:EPCCed/archer2-advanced-use-of-lammps.git
+git clone --depth=1 https://www.github.com/EPCCed/archer2-advanced-use-of-lammps.git
 ```
 
 Once this is downloaded, please `cd exercises/1-performance-exercise/`.

@@ -19,7 +19,7 @@ pair_coeff      * * 1.0 1.0
 neighbor        0.3 bin
 neigh_modify    delay 0
 
-timestep        0.0005
+timestep        0.005
 
 thermo_style    custom step temp etotal pe ke press vol density
 thermo          1000

@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --time=0:5:0
 
-#SBATCH --account=z19
+#SBATCH --account=ta132
 #SBATCH --partition=standard
 #SBATCH --qos=short
 #SBATCH --cpus-per-task=1
